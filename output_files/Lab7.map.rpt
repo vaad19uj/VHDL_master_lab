@@ -1,5 +1,5 @@
 Analysis & Synthesis report for Lab7
-Fri Feb 26 15:45:49 2021
+Thu Mar 04 13:24:47 2021
 Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
 
 
@@ -36,7 +36,7 @@ applicable agreement for further details.
 +--------------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status        ; Failed - Fri Feb 26 15:45:49 2021               ;
+; Analysis & Synthesis Status        ; Failed - Thu Mar 04 13:24:47 2021               ;
 ; Quartus II 64-Bit Version          ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition ;
 ; Revision Name                      ; Lab7                                            ;
 ; Top-level Entity Name              ; top_level                                       ;
@@ -155,7 +155,7 @@ Parallel compilation was disabled, but you have multiple processors available. E
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
     Info: Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
-    Info: Processing started: Fri Feb 26 15:45:43 2021
+    Info: Processing started: Thu Mar 04 13:24:43 2021
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off Lab7 -c Lab7
 Warning (20028): Parallel compilation is not licensed and has been disabled
 Info (12021): Found 2 design units, including 1 entities, in source file key_ctrl_rtl.vhd
@@ -179,7 +179,7 @@ Info (12021): Found 2 design units, including 1 entities, in source file altera_
 Info (12021): Found 2 design units, including 1 entities, in source file serial_ctrl_rtl.vhd
     Info (12022): Found design unit 1: serial_ctrl-rtl
     Info (12023): Found entity 1: serial_ctrl
-Error (10500): VHDL syntax error at pwm_ctrl_rtl.vhd(20) near text "end";  expecting an identifier ("end" is a reserved keyword), or "constant", or "file", or "signal", or "variable" File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/pwm_ctrl_rtl.vhd Line: 20
+Error (10500): VHDL syntax error at pwm_ctrl_rtl.vhd(21) near text "end";  expecting an identifier ("end" is a reserved keyword), or "constant", or "file", or "signal", or "variable" File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/pwm_ctrl_rtl.vhd Line: 21
 Info (12021): Found 0 design units, including 0 entities, in source file pwm_ctrl_rtl.vhd
 Info (12021): Found 2 design units, including 1 entities, in source file dc_disp_ctrl_rtl.vhd
     Info (12022): Found design unit 1: dc_disp_ctrl-rtl
@@ -191,9 +191,9 @@ Info (12021): Found 2 design units, including 1 entities, in source file reset_h
     Info (12022): Found design unit 1: reset_handler-rtl
     Info (12023): Found entity 1: reset_handler
 Error: Quartus II 64-Bit Analysis & Synthesis was unsuccessful. 2 errors, 2 warnings
-    Error: Peak virtual memory: 4620 megabytes
-    Error: Processing ended: Fri Feb 26 15:45:49 2021
-    Error: Elapsed time: 00:00:06
-    Error: Total CPU time (on all processors): 00:00:03
+    Error: Peak virtual memory: 4621 megabytes
+    Error: Processing ended: Thu Mar 04 13:24:47 2021
+    Error: Elapsed time: 00:00:04
+    Error: Total CPU time (on all processors): 00:00:02
 
 

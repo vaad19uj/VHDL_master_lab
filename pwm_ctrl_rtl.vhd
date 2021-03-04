@@ -8,6 +8,7 @@ entity pwm_ctrl is
 		serial_off			: in std_logic;
 		serial_up 			: in std_logic;
 		serial_down 		: in std_logic;
+		clk 					: in std_logic;
 		
 		key_on				: in std_logic;
 		key_off				: in std_logic;
@@ -21,6 +22,8 @@ end entity pwm_ctrl;
 
 
 architecture rtl of pwm_ctrl is
+
+	-- pwm_duty_cycle_percent 
 
 	begin
 	
@@ -41,5 +44,19 @@ architecture rtl of pwm_ctrl is
 	--	The PWM period is defined to start with a rising edge on the PWM output and end (+start) with the nextrising edge of the PWM output. 
 	--	The timing of the falling edge of the PWM output defines the duty cycle. 
 	--	The output PWM duty cycle shall be off (0% after reset). 
+	
+		p_pwm_ctrl : process(clk)
+		begin
+			if rising_edge(clk) then
+				if key_off = '1' then
+					-- pwm duty cycle 0%
+					
+				elsif key_on = '1' then
+					
+				elsif key_up = '1' and 
+				end if;
+			
+			end if;
+		end process p_pwm_ctrl;
 	
 end architecture rtl;
