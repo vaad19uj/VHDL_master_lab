@@ -3,21 +3,16 @@ library ieee;
 	use ieee.numeric_std.all;
 	
 entity dc_disp_ctrl is 
-generic(
---	-- generic?
---		current_dc0					: natural range 0 to 9;
---		current_dc1					: natural range 0 to 9;
---		current_dc2					: natural range 0 to 9);
 	port(
 		transmit_ready				: in std_logic;
 		current_dc_update			: in std_logic;
 		clk							: in std_logic;
 		transmit_bit_valid 		: out std_logic;
 		transmit_data				: out std_logic_vector(39 downto 0);	-- 5 byte
-		hex0							: out std_logic_vector(6 downto 0);
-		hex1							: out std_logic_vector(6 downto 0);
-		hex2							: out std_logic_vector(6 downto 0);
-		reset							: in std_logic
+		hex0							: out std_logic_vector(6 downto 0);	-- ones
+		hex1							: out std_logic_vector(6 downto 0); -- tens
+		hex2							: out std_logic_vector(6 downto 0);	-- hundreds
+		reset							: in std_logic;
 		current_dc					: in std_logic_vector(6 downto 0));
 end entity dc_disp_ctrl;
 
@@ -25,16 +20,39 @@ end entity dc_disp_ctrl;
 architecture rtl of dc_disp_ctrl is
 
 	-- types
-	--type natural_array is array (2 downto 0) of natural;
-
-	--signal current_dc 				: natural_array;
---	signal current_dc 				: natural range 0 to 100;
---	signal current_dc_update		: natural range 0 to 100;
+	type t_bcd_state is (s_idle, s_wait, s_done);
+	
+	-- components
+	component bcd_decode is
+   port(
+      clk                     : in  std_logic;
+      reset                   : in  std_logic;   -- active high reset
+      input_vector            : in  std_logic_vector(6 downto 0);	
+      valid_in                : in  std_logic;
+      ready                   : out std_logic;  -- ready for data when high
+      bcd_0                   : out std_logic_vector(3 downto 0); -- ones
+      bcd_1                   : out std_logic_vector(3 downto 0); -- tens
+      bcd_2                   : out std_logic_vector(3 downto 0); -- hundreds
+      valid_out               : out std_logic); -- Set high one clock cycle when bcd* is valid
+	end component bcd_decode;
 	
 	
+	-- signals
 	signal ASCII_dc_0 				: std_logic_vector(7 downto 0);
 	signal ASCII_dc_1 				: std_logic_vector(7 downto 0);
 	signal ASCII_dc_2 				: std_logic_vector(7 downto 0);
+	signal ready 						: std_logic;
+	signal valid_out					: std_logic;
+	signal valid_in					: std_logic;
+	signal bcd_0						: std_logic_vector(3 downto 0);
+	signal bcd_1						: std_logic_vector(3 downto 0);
+	signal bcd_2						: std_logic_vector(3 downto 0);
+	signal dc0							: integer range 0 to 9;
+	signal dc1							: integer range 0 to 9;
+	signal dc2							: integer range 0 to 1;
+	signal old_dc						: std_logic_vector(6 downto 0) := (others => '0');
+	signal bcd_state 					: t_bcd_state := s_idle;
+	
 	
 	-- constants
 	constant percent		 			: std_logic_vector(7 downto 0) := "00100101";	--37 decimal
@@ -43,42 +61,84 @@ architecture rtl of dc_disp_ctrl is
 
 	begin
 	
-	-- hex2 - 0 eller 1
-	-- hex1 - 0-9
-	-- hex0 - 0-9
-	
-		current_dc(0) 			<= current_dc0;
-		current_dc(1) 			<= current_dc1;
-		current_dc(2) 			<= current_dc2;
+		i_bcd_decode : bcd_decode
+		port map(
+			clk                     => clk,
+			reset                   => reset, 
+			input_vector            =>	current_dc,
+			valid_in                => valid_in,
+			ready                   => ready,
+			bcd_0                   => bcd_0,
+			bcd_1                   => bcd_1,
+			bcd_2                   => bcd_2,
+			valid_out               => valid_out
+		); 
 		
-		p_dc : process(reset)
+		
+		p_bcd : process(clk)
 		begin
+			if rising_edge(clk) then
+			
+				case bcd_state is
+				
+				when s_idle =>
+				
+					if current_dc_update = '1' then
+						valid_in <= '1';
+						bcd_state <= s_wait;
+					end if;
+				
+				when s_wait =>
+					
+					valid_in <= '0';
+					if valid_out = '1' then
+						bcd_state <= s_done;
+					end if;
+				
+				when s_done =>
+				
+					dc0 <= to_integer(bcd_0);
+					dc1 <= to_integer(bcd_1);
+					dc2 <= to_integer(bcd_2);
+					bcd_state <= s_idle;
+					
+				when others =>
+				
+					bcd_state <= s_idle;
+					
+				end case;
+			end if;
+		end process p_bcd;
 		
---			The duty cycle shall also be trasmitted on the serial interface whenever the duty cycle is updated. 
---			The transmitted data shall be five bytes of data. Three ASCII characters representing the duty cycle between 0 and 100 
---			followed by a "%" character, followed by a carrage return.  
---			In the case of a duty cycle between 10 and 99 the first character shall be replaced with a space. 
---			And in the case when the duty cycle is between 0 and 9 the first two characters shall be space. 
---			In the case of a new duty cycle update have been reported before the current duty cycle information 
---			have been fully transmitted on the serial interface the serial send shall be directly started 
---			again when finished in order to update the serial interface with the latest information. 
 
+		p_dc : process(reset, clk)
+		begin
 
-			if transmit_ready = '1' and current_dc /= current_dc_update then -- if duty cycle has been updated
+			if rising_edge(clk) then
 			
-				-- 0-9
-				if 
+				if reset = '1' then
+					-- 0% duty cycle
+					old_dc <= (others => '0');
 					transmit_data <= space & space & ASCII_dc_0 & percent & carriage_return;
-			
-				-- 10-99
-				elsif 
-					transmit_data <= space & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
-			
-				-- 100
-					transmit_data <= ASCII_dc_2 & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
+				
+				elsif transmit_ready = '1' and current_dc /= old_dc then 
+				
+					-- 0-9
+					if to_integer(current_dc) > 0 and to_integer(current_dc) < 10 then
+						old_dc <= current_dc;
+						transmit_data <= space & space & ASCII_dc_0 & percent & carriage_return;
+				
+					-- 10-99
+					elsif to_integer(current_dc) > 9 and to_integer(current_dc) < 100 then
+						old_dc <= current_dc;
+						transmit_data <= space & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
+				
+					-- 100
+					elsif to_integer(current_dc) = 100 then
+						old_dc <= current_dc;
+						transmit_data <= ASCII_dc_2 & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
+					end if;
 				end if;
-			
-			
 			end if;
 			
 		end process p_dc;
@@ -92,7 +152,7 @@ architecture rtl of dc_disp_ctrl is
 					ASCII_dc_0 <= "00110000";
 					
 				else
-					case current_dc(0) is
+					case dc0 is
 						when 0 =>
 						-- zero
 							ASCII_dc_0 <= "00110000";
@@ -152,7 +212,7 @@ architecture rtl of dc_disp_ctrl is
 					ASCII_dc_1 <= "00110000";
 					
 				else
-					case current_dc(1) is
+					case dc1 is
 						when 0 =>
 						-- zero
 							ASCII_dc_1 <= "00110000";
@@ -208,16 +268,18 @@ architecture rtl of dc_disp_ctrl is
 				-- zero
 				ASCII_dc_2 <= "00110000";
 				hex2 <= (others => '1');
-			elsif current_dc2 = 1 then
+			elsif dc2 = 1 then
 				ASCII_dc_2 <= "00110001";
 				hex2 <= (1 => '0', 2 => '0', others => '1');
-			else
+			elsif dc1 = 0 then
 				-- zero
 				ASCII_dc_2 <= "00110000";
 				hex2 <= (6 => '1', others => '0');
+			else
+				-- turned off
+				hex1 <= (others => '1');
 			end if;
 			
 		end process p_current_dc2;
 	
-		
 end architecture rtl;

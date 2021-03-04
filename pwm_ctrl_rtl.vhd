@@ -16,7 +16,7 @@ entity pwm_ctrl is
 		key_down 			: in std_logic;
 		current_dc_update	: out std_logic;
 		ledg0 				: out std_logic;
-		current_dc			: out std_logic_vector(6 downto 0);
+		current_dc			: out std_logic_vector(6 downto 0));
 end entity pwm_ctrl;
 
 
@@ -49,7 +49,7 @@ architecture rtl of pwm_ctrl is
 			if rising_edge(clk) then
 				if key_off = '1' then
 					-- pwm duty cycle 0%
-					
+					q
 				elsif key_on = '1' then
 					
 				elsif key_up = '1' and 
