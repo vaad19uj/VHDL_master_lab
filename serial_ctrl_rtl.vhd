@@ -31,6 +31,11 @@ architecture rtl of serial_ctrl is
 					
 					-- When the ASCII Character ‘U’ or ‘u’ is received a one clock cycle 
 					-- long pulse shall be generated on the serial_up output. 
+					serial_up <= '1';
+					serial_down <= '0';
+					serial_off <= '0';
+					serial_on <= '0';
+					
 					
 				-- ASCII u
 				-- 117
@@ -38,6 +43,10 @@ architecture rtl of serial_ctrl is
 				
 				-- When the ASCII Character ‘U’ or ‘u’ is received a one clock cycle 
 				-- long pulse shall be generated on the serial_up output. 
+					serial_up <= '1';
+					serial_down <= '0';
+					serial_off <= '0';
+					serial_on <= '0';
 				
 				-- ASCII D
 				-- 68
@@ -45,23 +54,45 @@ architecture rtl of serial_ctrl is
 				
 				-- The serial_down signal shall be controlled in the same way 
 				-- when ASCII character ‘D’ or ‘d’ is received. 
+					serial_up <= '0';
+					serial_down <= '1';
+					serial_off <= '0';
+					serial_on <= '0';
 				
 				-- ASCII d
 				-- 100
 				when "01100100" =>
 				
 				-- The serial_down signal shall be controlled in the same way 
-				-- when ASCII character ‘D’ or ‘d’ is received. 
+				-- when ASCII character ‘D’ or ‘d’ is received.
+					serial_up <= '0';
+					serial_down <= '1';
+					serial_off <= '0';
+					serial_on <= '0';	
 				
 				-- ASCII 0
 				when "00110000" =>
 				
 				-- The serial_off signal shall be pulsed high when the number ‘0’ is received. 
+					serial_up <= '0';
+					serial_down <= '0';
+					serial_off <= '1';
+					serial_on <= '0';
 				
 				-- ASCII 1
 				when "00110001" =>
 				
 				-- And the serial_on signal shall be pulsed when the ASCII Character for number ‘1’ is received. 
+					serial_up <= '0';
+					serial_down <= '0';
+					serial_off <= '0';
+					serial_on <= '1';
+				
+				when others =>
+					serial_up <= '0';
+					serial_down <= '0';
+					serial_off <= '0';
+					serial_on <= '0';
 				
 				end case;
 			end if;

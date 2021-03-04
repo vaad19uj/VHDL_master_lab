@@ -31,6 +31,22 @@ begin
 	begin
 		if rising_edge(clock) then
 		
+			--	Key_n input bits 3, 2 and 1 shall be ignored if key_n(0) is pushed down.
+			if key_in_2r(0) = '0' then
+			
+			--	No pulses on key_up or key_down shall be generated if both key_n(2) and key_n(3) is pushed down simultaneously. 
+			elsif key_in_2r(2) = '0' and key_in_2r(3) = '0' then
+				
+			else
+			
+				key_off <= not key_in_2r(0);
+				key_off <= not key_in_2r(1);
+				key_down <= not key_in_2r(2);
+				key_up <= not key_in_2r(3);
+			
+			end if;
+			
+		
 --			key_n(0) shall control key_off output 
 --			key_n(1) shall control key_on output 
 --			key_n(2) shall control key_down output 
