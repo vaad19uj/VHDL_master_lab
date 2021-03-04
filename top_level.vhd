@@ -18,6 +18,8 @@ end entity top_level;
 
 
 architecture rtl of top_level is
+
+	-- 
 	
 	-- signals
 	signal received_byte_data 				: std_logic_vector(7 downto 0);

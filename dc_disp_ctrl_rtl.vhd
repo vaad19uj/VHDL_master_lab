@@ -4,10 +4,10 @@ library ieee;
 	
 entity dc_disp_ctrl is 
 generic(
-	-- generic?
-		current_dc0					: natural range 0 to 9;
-		current_dc1					: natural range 0 to 9;
-		current_dc2					: natural range 0 to 9);
+--	-- generic?
+--		current_dc0					: natural range 0 to 9;
+--		current_dc1					: natural range 0 to 9;
+--		current_dc2					: natural range 0 to 9);
 	port(
 		transmit_ready				: in std_logic;
 		current_dc_update			: in std_logic;
@@ -17,7 +17,8 @@ generic(
 		hex0							: out std_logic_vector(6 downto 0);
 		hex1							: out std_logic_vector(6 downto 0);
 		hex2							: out std_logic_vector(6 downto 0);
-		reset							: in std_logic);
+		reset							: in std_logic
+		current_dc					: in std_logic_vector(6 downto 0));
 end entity dc_disp_ctrl;
 
 
@@ -27,8 +28,8 @@ architecture rtl of dc_disp_ctrl is
 	--type natural_array is array (2 downto 0) of natural;
 
 	--signal current_dc 				: natural_array;
-	signal current_dc 				: natural range 0 to 100;
-	signal current_dc_update		: natural range 0 to 100;
+--	signal current_dc 				: natural range 0 to 100;
+--	signal current_dc_update		: natural range 0 to 100;
 	
 	
 	signal ASCII_dc_0 				: std_logic_vector(7 downto 0);
@@ -55,7 +56,7 @@ architecture rtl of dc_disp_ctrl is
 		
 --			The duty cycle shall also be trasmitted on the serial interface whenever the duty cycle is updated. 
 --			The transmitted data shall be five bytes of data. Three ASCII characters representing the duty cycle between 0 and 100 
---			followed by a â€˜%â€™ character, followed by a carrage return.  
+--			followed by a "%" character, followed by a carrage return.  
 --			In the case of a duty cycle between 10 and 99 the first character shall be replaced with a space. 
 --			And in the case when the duty cycle is between 0 and 9 the first two characters shall be space. 
 --			In the case of a new duty cycle update have been reported before the current duty cycle information 
