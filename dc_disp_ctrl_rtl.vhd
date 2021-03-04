@@ -24,9 +24,13 @@ end entity dc_disp_ctrl;
 architecture rtl of dc_disp_ctrl is
 
 	-- types
-	type natural_array is array (2 downto 0) of natural;
+	--type natural_array is array (2 downto 0) of natural;
 
-	signal current_dc 				: natural_array;
+	--signal current_dc 				: natural_array;
+	signal current_dc 				: natural range 0 to 100;
+	signal current_dc_update		: natural range 0 to 100;
+	
+	
 	signal ASCII_dc_0 				: std_logic_vector(7 downto 0);
 	signal ASCII_dc_1 				: std_logic_vector(7 downto 0);
 	signal ASCII_dc_2 				: std_logic_vector(7 downto 0);
@@ -51,7 +55,7 @@ architecture rtl of dc_disp_ctrl is
 		
 --			The duty cycle shall also be trasmitted on the serial interface whenever the duty cycle is updated. 
 --			The transmitted data shall be five bytes of data. Three ASCII characters representing the duty cycle between 0 and 100 
---			followed by a ‘%’ character, followed by a carrage return.  
+--			followed by a â€˜%â€™ character, followed by a carrage return.  
 --			In the case of a duty cycle between 10 and 99 the first character shall be replaced with a space. 
 --			And in the case when the duty cycle is between 0 and 9 the first two characters shall be space. 
 --			In the case of a new duty cycle update have been reported before the current duty cycle information 
@@ -59,16 +63,20 @@ architecture rtl of dc_disp_ctrl is
 --			again when finished in order to update the serial interface with the latest information. 
 
 
-			if transmit_ready = '1' then 
+			if transmit_ready = '1' and current_dc /= current_dc_update then -- if duty cycle has been updated
 			
-			-- 0-9
-				transmit_data <= space & space & ASCII_dc_0 & percent & carriage_return;
+				-- 0-9
+				if 
+					transmit_data <= space & space & ASCII_dc_0 & percent & carriage_return;
 			
-			-- 10-99
-				transmit_data <= space & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
+				-- 10-99
+				elsif 
+					transmit_data <= space & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
 			
-			-- 100
-				transmit_data <= ASCII_dc_2 & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
+				-- 100
+					transmit_data <= ASCII_dc_2 & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
+				end if;
+			
 			
 			end if;
 			
