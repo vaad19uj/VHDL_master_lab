@@ -510,7 +510,7 @@ begin -- architecture
 
    key_n <= key_up_n & key_down_n & key_on_n & key_off_n;
 
-   i_pwm_module : entity work.pwm_ctrl
+   i_pwm_module : entity work.top_level
    generic map(
       g_simulation            => true)
    port map(
@@ -530,7 +530,7 @@ begin -- architecture
       hex0                    => hex0,
       hex1                    => hex1,
       hex2                    => hex2,
-      hex3                    => hex3,
+    --  hex3                    => hex3,
 
       -- Green led outputs
       ledg                    => ledg,

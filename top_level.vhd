@@ -11,8 +11,10 @@ entity top_level is
 		fpga_in_rx 		: in std_logic;	-- serial input data
 		
 		fpga_out_tx 	: out std_logic;	-- serial output data
-		ledg0 			: out std_logic; 
-		ledr0 			: out std_logic;
+		--ledg0 			: out std_logic; 
+		--ledr0 			: out std_logic;
+		ledr           : std_logic_vector(9 downto 0);
+		ledg           : std_logic_vector(7 downto 0);
 		hex0 				: out std_logic_vector(6 downto 0);
 		hex1 				: out std_logic_vector(6 downto 0);
 		hex2 				: out std_logic_vector(6 downto 0));
@@ -85,7 +87,7 @@ architecture rtl of top_level is
 	
 			received_data           => received_byte_data,
 			received_valid          => received_bit_valid,
-			received_error          => ledr0,
+			received_error          => ledr(0),
 			received_parity_error   => open,
 	
 			transmit_ready          => transmit_ready,
@@ -116,7 +118,7 @@ architecture rtl of top_level is
 		key_up 							=> key_up,
 		key_down 						=> key_down,
 		current_dc_update				=> current_dc_update,
-		ledg0 							=> ledg0,
+		ledg0 							=> ledg(0),
 		current_dc						=> current_dc);
 		
 		

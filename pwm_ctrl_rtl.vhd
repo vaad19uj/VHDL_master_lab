@@ -9,6 +9,7 @@ entity pwm_ctrl is
 		serial_up 			: in std_logic;
 		serial_down 		: in std_logic;
 		clk 					: in std_logic;
+		reset					: in std_logic;
 		
 		key_on				: in std_logic;
 		key_off				: in std_logic;
