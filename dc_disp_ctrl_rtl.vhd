@@ -41,17 +41,17 @@ architecture rtl of dc_disp_ctrl is
 	signal ASCII_dc_0 				: std_logic_vector(7 downto 0);
 	signal ASCII_dc_1 				: std_logic_vector(7 downto 0);
 	signal ASCII_dc_2 				: std_logic_vector(7 downto 0);
-	signal ready 						: std_logic;
-	signal valid_out					: std_logic;
-	signal valid_in					: std_logic;
+	signal ready 						: std_logic := '0';
+	signal valid_out					: std_logic := '0';
+	signal valid_in					: std_logic := '0';
 	signal bcd_0						: std_logic_vector(3 downto 0);
 	signal bcd_1						: std_logic_vector(3 downto 0);
 	signal bcd_2						: std_logic_vector(3 downto 0);
 	signal dc0							: integer range 0 to 9;
 	signal dc1							: integer range 0 to 9;
 	signal dc2							: integer range 0 to 1;
-	signal old_dc						: std_logic_vector(6 downto 0) := (others => '0');
 	signal bcd_state 					: t_bcd_state := s_idle;
+--	signal old_dc						: std_logic_vector(6 downto 0) := (others => '0');
 	
 	
 	-- constants
@@ -116,26 +116,33 @@ architecture rtl of dc_disp_ctrl is
 
 			if rising_edge(clk) then
 			
+			transmit_bit_valid <= '0';
+			
 				if reset = '1' then
+					transmit_bit_valid <= transmit_ready; -- only try to send if UART is ready
 					-- 0% duty cycle
-					old_dc <= (others => '0');
+					--old_dc <= (others => '0');
 					transmit_data <= space & space & ASCII_dc_0 & percent & carriage_return;
 				
-				elsif transmit_ready = '1' and current_dc /= old_dc then 
+				--elsif transmit_ready = '1' and current_dc /= old_dc then 
+				elsif transmit_ready = '1' and current_dc_update = '1' then
 				
 					-- 0-9
 					if to_integer(current_dc) > 0 and to_integer(current_dc) < 10 then
-						old_dc <= current_dc;
+						transmit_bit_valid <= transmit_ready; -- only try to send if UART is ready
+						--old_dc <= current_dc;
 						transmit_data <= space & space & ASCII_dc_0 & percent & carriage_return;
 				
 					-- 10-99
 					elsif to_integer(current_dc) > 9 and to_integer(current_dc) < 100 then
-						old_dc <= current_dc;
+						transmit_bit_valid <= transmit_ready; -- only try to send if UART is ready
+					--	old_dc <= current_dc;
 						transmit_data <= space & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
 				
 					-- 100
 					elsif to_integer(current_dc) = 100 then
-						old_dc <= current_dc;
+						transmit_bit_valid <= transmit_ready; -- only try to send if UART is ready
+						--old_dc <= current_dc;
 						transmit_data <= ASCII_dc_2 & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
 					end if;
 				end if;

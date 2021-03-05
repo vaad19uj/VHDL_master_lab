@@ -510,7 +510,7 @@ begin -- architecture
 
    key_n <= key_up_n & key_down_n & key_on_n & key_off_n;
 
-   i_pwm_module : entity work.pwm_module
+   i_pwm_module : entity work.pwm_ctrl
    generic map(
       g_simulation            => true)
    port map(
