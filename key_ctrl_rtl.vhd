@@ -18,7 +18,7 @@ architecture rtl of key_ctrl is
 	-- signals
 	signal key_in_r 		: std_logic_vector(3 downto 0);
 	signal key_in_2r 		: std_logic_vector(3 downto 0);
-	signal ticks			: integer range 0 to 500000;
+	signal ticks			: natural range 0 to 500000;
 
 begin
 	
@@ -95,5 +95,4 @@ begin
 			end if;
 		end if;
 	end process p_key_ctrl;
-
 end architecture rtl;

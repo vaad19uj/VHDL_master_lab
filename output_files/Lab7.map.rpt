@@ -1,5 +1,5 @@
 Analysis & Synthesis report for Lab7
-Fri Mar 05 14:24:59 2021
+Fri Mar 05 15:24:10 2021
 Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
 
 
@@ -36,7 +36,7 @@ applicable agreement for further details.
 +--------------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status        ; Failed - Fri Mar 05 14:24:59 2021               ;
+; Analysis & Synthesis Status        ; Failed - Fri Mar 05 15:24:10 2021               ;
 ; Quartus II 64-Bit Version          ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition ;
 ; Revision Name                      ; Lab7                                            ;
 ; Top-level Entity Name              ; top_level                                       ;
@@ -155,7 +155,7 @@ Parallel compilation was disabled, but you have multiple processors available. E
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
     Info: Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
-    Info: Processing started: Fri Mar 05 14:24:57 2021
+    Info: Processing started: Fri Mar 05 15:24:07 2021
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off Lab7 -c Lab7
 Warning (20028): Parallel compilation is not licensed and has been disabled
 Info (12021): Found 2 design units, including 1 entities, in source file key_ctrl_rtl.vhd
@@ -178,9 +178,7 @@ Info (12021): Found 2 design units, including 1 entities, in source file altera_
 Info (12021): Found 2 design units, including 1 entities, in source file serial_ctrl_rtl.vhd
     Info (12022): Found design unit 1: serial_ctrl-rtl
     Info (12023): Found entity 1: serial_ctrl
-Info (12021): Found 2 design units, including 1 entities, in source file pwm_ctrl_rtl.vhd
-    Info (12022): Found design unit 1: pwm_ctrl-rtl
-    Info (12023): Found entity 1: pwm_ctrl
+Info (12021): Found 0 design units, including 0 entities, in source file pwm_ctrl_rtl.vhd
 Info (12021): Found 2 design units, including 1 entities, in source file dc_disp_ctrl_rtl.vhd
     Info (12022): Found design unit 1: dc_disp_ctrl-rtl
     Info (12023): Found entity 1: dc_disp_ctrl
@@ -193,29 +191,11 @@ Info (12021): Found 2 design units, including 1 entities, in source file reset_h
 Info (12021): Found 2 design units, including 1 entities, in source file bcd_decoder.vhd
     Info (12022): Found design unit 1: bcd_decode-rtl
     Info (12023): Found entity 1: bcd_decode
-Error (10349): VHDL Association List error at testbench_top.vhd(515): formal "g_simulation" does not exist File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 515
-Error (10349): VHDL Association List error at testbench_top.vhd(517): formal "clock_50" does not exist File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 517
-Error (10346): VHDL error at testbench_top.vhd(513): formal port or parameter "serial_on" must have actual or default value File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 513
-Error (10784): HDL error at pwm_ctrl_rtl.vhd(7): see declaration for object "serial_on" File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/pwm_ctrl_rtl.vhd Line: 7
-Error (10346): VHDL error at testbench_top.vhd(513): formal port or parameter "serial_off" must have actual or default value File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 513
-Error (10784): HDL error at pwm_ctrl_rtl.vhd(8): see declaration for object "serial_off" File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/pwm_ctrl_rtl.vhd Line: 8
-Error (10346): VHDL error at testbench_top.vhd(513): formal port or parameter "serial_up" must have actual or default value File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 513
-Error (10784): HDL error at pwm_ctrl_rtl.vhd(9): see declaration for object "serial_up" File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/pwm_ctrl_rtl.vhd Line: 9
-Error (10346): VHDL error at testbench_top.vhd(513): formal port or parameter "serial_down" must have actual or default value File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 513
-Error (10784): HDL error at pwm_ctrl_rtl.vhd(10): see declaration for object "serial_down" File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/pwm_ctrl_rtl.vhd Line: 10
-Error (10346): VHDL error at testbench_top.vhd(513): formal port or parameter "clk" must have actual or default value File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 513
-Error (10784): HDL error at pwm_ctrl_rtl.vhd(11): see declaration for object "clk" File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/pwm_ctrl_rtl.vhd Line: 11
-Error (10346): VHDL error at testbench_top.vhd(513): formal port or parameter "key_on" must have actual or default value File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 513
-Error (10784): HDL error at pwm_ctrl_rtl.vhd(13): see declaration for object "key_on" File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/pwm_ctrl_rtl.vhd Line: 13
-Error (10346): VHDL error at testbench_top.vhd(513): formal port or parameter "key_off" must have actual or default value File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 513
-Error (10784): HDL error at pwm_ctrl_rtl.vhd(14): see declaration for object "key_off" File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/pwm_ctrl_rtl.vhd Line: 14
-Error (10346): VHDL error at testbench_top.vhd(513): formal port or parameter "key_up" must have actual or default value File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 513
-Error (10784): HDL error at pwm_ctrl_rtl.vhd(15): see declaration for object "key_up" File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/pwm_ctrl_rtl.vhd Line: 15
-Error (10346): VHDL error at testbench_top.vhd(513): formal port or parameter "key_down" must have actual or default value File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 513
-Error: Quartus II 64-Bit Analysis & Synthesis was unsuccessful. 19 errors, 2 warnings
-    Error: Peak virtual memory: 4622 megabytes
-    Error: Processing ended: Fri Mar 05 14:24:59 2021
-    Error: Elapsed time: 00:00:02
-    Error: Total CPU time (on all processors): 00:00:02
+Error (10481): VHDL Use Clause error at testbench_top.vhd(513): design library "work" does not contain primary unit "pwm_ctrl" File: C:/altera/13.0sp1/VHDL/Labbar/VHDL_master_lab7/testbench_top.vhd Line: 513
+Error: Quartus II 64-Bit Analysis & Synthesis was unsuccessful. 1 error, 2 warnings
+    Error: Peak virtual memory: 4621 megabytes
+    Error: Processing ended: Fri Mar 05 15:24:10 2021
+    Error: Elapsed time: 00:00:03
+    Error: Total CPU time (on all processors): 00:00:03
 
 
