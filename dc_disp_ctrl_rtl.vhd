@@ -277,7 +277,7 @@ architecture rtl of dc_disp_ctrl is
 			end if;
 		end process p_current_dc1;
 			
-		p_current_dc2 : process(clk, reset)
+		p_current_dc2 : process(clk, reset, dc2)
 		begin
 			if reset = '1' then
 				-- zero
@@ -286,7 +286,7 @@ architecture rtl of dc_disp_ctrl is
 			elsif dc2 = 1 then
 				ASCII_dc_2 <= "00110001";
 				hex2 <= (1 => '0', 2 => '0', others => '1');
-			elsif dc1 = 0 then
+			elsif dc2 = 0 then
 				-- zero
 				ASCII_dc_2 <= "00110000";
 				hex2 <= (6 => '1', others => '0');
