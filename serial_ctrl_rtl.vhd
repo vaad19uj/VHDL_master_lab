@@ -4,8 +4,8 @@ library ieee;
 
 entity serial_ctrl is 
 	port(
-		received_byte_data 		: in std_logic_vector(7 downto 0);
-		received_bit_valid		: in std_logic;
+		received_data 				: in std_logic_vector(7 downto 0);
+		received_valid				: in std_logic;
 		clk							: in std_logic;
 		serial_up 					: out std_logic;
 		serial_down 				: out std_logic;
@@ -22,8 +22,8 @@ architecture rtl of serial_ctrl is
 	begin
 	
 		if rising_edge(clk) then
-			if received_bit_valid = '1' then
-				case received_byte_data is
+			if received_valid = '1' then
+				case received_data is
 				
 				-- ASCII U 
 				-- 85

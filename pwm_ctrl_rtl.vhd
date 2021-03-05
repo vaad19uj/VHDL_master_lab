@@ -17,7 +17,7 @@ entity pwm_ctrl is
 		key_down 			: in std_logic;
 		current_dc_update	: out std_logic;
 		ledg0 				: out std_logic;
-		current_dc			: out std_logic_vector(6 downto 0));
+		current_dc			: out std_logic_vector(7 downto 0));
 end entity pwm_ctrl;
 
 

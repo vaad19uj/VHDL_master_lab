@@ -4,7 +4,7 @@ library ieee;
 
 entity top_level is 
 	generic(
-		g_simulation 	: boolean);
+		g_simulation 	: boolean				:= false);
 	port(
 		clock_50 		: in std_logic;	-- connected to internal PLL
 		key_n 			: in std_logic_vector(3 downto 0);	
@@ -13,8 +13,8 @@ entity top_level is
 		fpga_out_tx 	: out std_logic;	-- serial output data
 		--ledg0 			: out std_logic; 
 		--ledr0 			: out std_logic;
-		ledr           : std_logic_vector(9 downto 0);
-		ledg           : std_logic_vector(7 downto 0);
+		ledr           : out std_logic_vector(9 downto 0);
+		ledg           : out std_logic_vector(7 downto 0);
 		hex0 				: out std_logic_vector(6 downto 0);
 		hex1 				: out std_logic_vector(6 downto 0);
 		hex2 				: out std_logic_vector(6 downto 0));
@@ -24,7 +24,25 @@ end entity top_level;
 architecture rtl of top_level is
 	
 	-- signals
-
+	signal clk_50								: std_logic;
+	signal pll_locked							: std_logic;
+	signal reset								: std_logic;
+	signal received_valid					: std_logic;
+	signal received_data						: std_logic_vector(7 downto 0);
+	signal transmit_data						: std_logic_vector(7 downto 0);
+	signal transmit_valid					: std_logic;
+	signal transmit_ready					: std_logic;
+	signal key_on 								: std_logic;
+	signal key_off 							: std_logic;
+	signal key_down 							: std_logic;
+	signal key_up 								: std_logic;
+	signal serial_off							: std_logic;
+	signal serial_on							: std_logic;
+	signal serial_up							: std_logic;
+	signal serial_down						: std_logic;
+	signal current_dc							: std_logic_vector(7 downto 0);
+	signal current_dc_update				: std_logic;
+	
 	-- constants
 	constant c_reset_active_state 		: std_logic := '1';   
 	constant c_serial_speed_bps 			: natural := 115200;     
@@ -45,20 +63,7 @@ architecture rtl of top_level is
          c2		      				=> open,       -- 100 MHz output clock unused
          locked						=> pll_locked);-- PLL Locked output signal
 			
-
-	i_reset_ctrl : entity work.reset_ctrl
-      generic map(
-         g_reset_hold_clk  		=> 127)
-      port map(
-         clk         				=> clk_50,
-         reset_in    				=> '0',
-         reset_in_n  				=> pll_locked, -- reset active if PLL is not locked
-
-         reset_out   				=> reset,
-         reset_out_n 				=> open);
-   end generate;
-	
-
+			
    b_sim_clock_gen : if g_simulation generate
       clk_50   <= clock_50;
       p_internal_reset : process
@@ -70,6 +75,19 @@ architecture rtl of top_level is
          reset    <= '0';
          wait;
       end process p_internal_reset;
+   end generate;
+	
+	
+	i_reset_ctrl : entity work.reset_ctrl
+      generic map(
+         g_reset_hold_clk  		=> 127)
+      port map(
+         clk         				=> clk_50,
+         reset_in    				=> '0',
+         reset_in_n  				=> pll_locked, -- reset active if PLL is not locked
+
+         reset_out   				=> reset,
+         reset_out_n 				=> open);
    end generate;
 	
 	
@@ -85,13 +103,13 @@ architecture rtl of top_level is
 			rx                      => fpga_in_rx, 
 			tx                      => fpga_out_tx,
 	
-			received_data           => received_byte_data,
-			received_valid          => received_bit_valid,
+			received_data           => received_data,
+			received_valid          => received_valid,
 			received_error          => ledr(0),
 			received_parity_error   => open,
 	
 			transmit_ready          => transmit_ready,
-			transmit_valid          => transmit_bit_valid,
+			transmit_valid          => transmit_valid,
 			transmit_data				=> transmit_data);
 		
 
@@ -112,7 +130,7 @@ architecture rtl of top_level is
 		serial_up 						=> serial_up,
 		serial_down 					=> serial_down,
 		clk 								=> clk_50,
-		
+		reset								=> reset,
 		key_on							=> key_on,
 		key_off							=> key_off,
 		key_up 							=> key_up,
@@ -124,8 +142,8 @@ architecture rtl of top_level is
 		
 	i_serial_ctrl : entity work.serial_ctrl
 		port map(
-		received_byte_data 			=> received_data,
-		received_bit_valid			=> received_valid,
+		received_data 					=> received_data,
+		received_valid					=> received_valid,
 		clk								=> clk_50,
 		serial_up 						=> serial_up,
 		serial_down 					=> serial_down,
@@ -138,7 +156,7 @@ architecture rtl of top_level is
 		transmit_ready					=> transmit_ready,
 		current_dc_update				=> current_dc_update,
 		clk								=> clk_50,
-		transmit_bit_valid 			=> transmit_valid,
+		transmit_valid 				=> transmit_valid,
 		transmit_data					=> transmit_data,
 		hex0								=> hex0,
 		hex1								=> hex1,

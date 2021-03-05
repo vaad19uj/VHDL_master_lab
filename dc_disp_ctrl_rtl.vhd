@@ -7,13 +7,14 @@ entity dc_disp_ctrl is
 		transmit_ready				: in std_logic;
 		current_dc_update			: in std_logic;
 		clk							: in std_logic;
-		transmit_bit_valid 		: out std_logic;
-		transmit_data				: out std_logic_vector(39 downto 0);	-- 5 byte
+		transmit_valid 			: out std_logic;
+		--transmit_data				: out std_logic_vector(39 downto 0);	-- 5 byte
+		transmit_data				: out std_logic_vector(7 downto 0);
 		hex0							: out std_logic_vector(6 downto 0);	-- ones
 		hex1							: out std_logic_vector(6 downto 0); -- tens
 		hex2							: out std_logic_vector(6 downto 0);	-- hundreds
 		reset							: in std_logic;
-		current_dc					: in std_logic_vector(6 downto 0));
+		current_dc					: in std_logic_vector(7 downto 0));
 end entity dc_disp_ctrl;
 
 
@@ -27,7 +28,7 @@ architecture rtl of dc_disp_ctrl is
    port(
       clk                     : in  std_logic;
       reset                   : in  std_logic;   -- active high reset
-      input_vector            : in  std_logic_vector(6 downto 0);	
+      input_vector            : in  std_logic_vector(7 downto 0);	
       valid_in                : in  std_logic;
       ready                   : out std_logic;  -- ready for data when high
       bcd_0                   : out std_logic_vector(3 downto 0); -- ones
@@ -38,20 +39,20 @@ architecture rtl of dc_disp_ctrl is
 	
 	
 	-- signals
-	signal ASCII_dc_0 				: std_logic_vector(7 downto 0);
-	signal ASCII_dc_1 				: std_logic_vector(7 downto 0);
-	signal ASCII_dc_2 				: std_logic_vector(7 downto 0);
-	signal ready 						: std_logic := '0';
-	signal valid_out					: std_logic := '0';
-	signal valid_in					: std_logic := '0';
-	signal bcd_0						: std_logic_vector(3 downto 0);
-	signal bcd_1						: std_logic_vector(3 downto 0);
-	signal bcd_2						: std_logic_vector(3 downto 0);
-	signal dc0							: integer range 0 to 9;
-	signal dc1							: integer range 0 to 9;
-	signal dc2							: integer range 0 to 1;
-	signal bcd_state 					: t_bcd_state := s_idle;
---	signal old_dc						: std_logic_vector(6 downto 0) := (others => '0');
+	signal ASCII_dc_0 						: std_logic_vector(7 downto 0);
+	signal ASCII_dc_1 						: std_logic_vector(7 downto 0);
+	signal ASCII_dc_2 						: std_logic_vector(7 downto 0);
+	signal ready 								: std_logic := '0';
+	signal valid_out							: std_logic := '0';
+	signal valid_in							: std_logic := '0';
+	signal bcd_0								: std_logic_vector(3 downto 0);
+	signal bcd_1								: std_logic_vector(3 downto 0);
+	signal bcd_2								: std_logic_vector(3 downto 0);
+	signal dc0									: integer range 0 to 9;
+	signal dc1									: integer range 0 to 9;
+	signal dc2									: integer range 0 to 1;
+	signal bcd_state 							: t_bcd_state := s_idle;
+	signal transmit_data_five_bytes 		: std_logic_vector(39 downto 0);
 	
 	
 	-- constants
@@ -97,9 +98,9 @@ architecture rtl of dc_disp_ctrl is
 				
 				when s_done =>
 				
-					dc0 <= to_integer(bcd_0);
-					dc1 <= to_integer(bcd_1);
-					dc2 <= to_integer(bcd_2);
+					dc0 <= to_integer(unsigned(bcd_0));
+					dc1 <= to_integer(unsigned(bcd_1));
+					dc2 <= to_integer(unsigned(bcd_2));
 					bcd_state <= s_idle;
 					
 				when others =>
@@ -110,40 +111,47 @@ architecture rtl of dc_disp_ctrl is
 			end if;
 		end process p_bcd;
 		
+		p_transmit_data : process(reset, clk)
+		begin
+			if rising_edge(clk) then
+			
+			transmit_valid <= '0';
+			
+				if reset = '1' then
+					transmit_valid <= transmit_ready; -- only try to send if UART is ready
+					
+				
+				elsif transmit_ready = '1' and current_dc_update = '1' then
+				
+						-- 
+						
+				end if;
+			end if;
+		
+		end process p_transmit_data;
+		
 
 		p_dc : process(reset, clk)
 		begin
 
 			if rising_edge(clk) then
 			
-			transmit_bit_valid <= '0';
-			
 				if reset = '1' then
-					transmit_bit_valid <= transmit_ready; -- only try to send if UART is ready
 					-- 0% duty cycle
-					--old_dc <= (others => '0');
-					transmit_data <= space & space & ASCII_dc_0 & percent & carriage_return;
+					transmit_data_five_bytes <= space & space & ASCII_dc_0 & percent & carriage_return;
 				
-				--elsif transmit_ready = '1' and current_dc /= old_dc then 
-				elsif transmit_ready = '1' and current_dc_update = '1' then
-				
+				else 
 					-- 0-9
-					if to_integer(current_dc) > 0 and to_integer(current_dc) < 10 then
-						transmit_bit_valid <= transmit_ready; -- only try to send if UART is ready
-						--old_dc <= current_dc;
-						transmit_data <= space & space & ASCII_dc_0 & percent & carriage_return;
+					if to_integer(unsigned(current_dc)) > 0 and to_integer(unsigned(current_dc)) < 10 then
+						transmit_data_five_bytes <= space & space & ASCII_dc_0 & percent & carriage_return;
 				
 					-- 10-99
-					elsif to_integer(current_dc) > 9 and to_integer(current_dc) < 100 then
-						transmit_bit_valid <= transmit_ready; -- only try to send if UART is ready
-					--	old_dc <= current_dc;
-						transmit_data <= space & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
+					elsif to_integer(unsigned(current_dc)) > 9 and to_integer(unsigned(current_dc)) < 100 then
+						transmit_data_five_bytes <= space & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
 				
 					-- 100
-					elsif to_integer(current_dc) = 100 then
-						transmit_bit_valid <= transmit_ready; -- only try to send if UART is ready
-						--old_dc <= current_dc;
-						transmit_data <= ASCII_dc_2 & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
+					elsif to_integer(unsigned(current_dc)) = 100 then
+						transmit_data_five_bytes <= ASCII_dc_2 & ASCII_dc_1 & ASCII_dc_0 & percent & carriage_return;
 					end if;
 				end if;
 			end if;
@@ -215,7 +223,7 @@ architecture rtl of dc_disp_ctrl is
 			if rising_edge(clk) then
 				if reset = '1' then
 					-- zero
-					hex1 <= (others => '1');
+					hex1 <= (6 => '1', others => '0');
 					ASCII_dc_1 <= "00110000";
 					
 				else
@@ -284,7 +292,7 @@ architecture rtl of dc_disp_ctrl is
 				hex2 <= (6 => '1', others => '0');
 			else
 				-- turned off
-				hex1 <= (others => '1');
+				hex2 <= (others => '1');
 			end if;
 			
 		end process p_current_dc2;
