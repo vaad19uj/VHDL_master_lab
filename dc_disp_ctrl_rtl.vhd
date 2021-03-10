@@ -8,7 +8,6 @@ entity dc_disp_ctrl is
 		current_dc_update			: in std_logic;
 		clk							: in std_logic;
 		transmit_valid 			: out std_logic;
-		--transmit_data				: out std_logic_vector(39 downto 0);	-- 5 byte
 		transmit_data				: out std_logic_vector(7 downto 0);
 		hex0							: out std_logic_vector(6 downto 0);	-- ones
 		hex1							: out std_logic_vector(6 downto 0); -- tens
