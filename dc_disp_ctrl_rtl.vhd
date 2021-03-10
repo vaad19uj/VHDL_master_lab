@@ -22,6 +22,7 @@ architecture rtl of dc_disp_ctrl is
 
 	-- types
 	type t_bcd_state is (s_idle, s_wait, s_done);
+	type t_transmit_byte_state is (s_idle, s_first, s_second, s_third, s_fourth, s_fifth);
 	
 	-- components
 	component bcd_decode is
@@ -53,6 +54,7 @@ architecture rtl of dc_disp_ctrl is
 	signal dc2									: integer range 0 to 1;
 	signal bcd_state 							: t_bcd_state := s_idle;
 	signal transmit_data_five_bytes 		: std_logic_vector(39 downto 0);
+	signal transmit_state					: t_transmit_byte_state := s_idle;
 	
 	
 	-- constants
@@ -115,17 +117,72 @@ architecture rtl of dc_disp_ctrl is
 		begin
 			if rising_edge(clk) then
 			
-			transmit_valid <= '0';
+			case transmit_state is
+				
+			when s_idle =>
 			
-				if reset = '1' then
-					transmit_valid <= transmit_ready; -- only try to send if UART is ready
-					
+				transmit_valid <= '0';
 				
-				elsif transmit_ready = '1' and current_dc_update = '1' then
-				
-						-- 
-						
+				if transmit_ready = '1' then
+					transmit_state <= s_first;
 				end if;
+			
+			when s_first =>
+			
+			--	transmit_data <= transmit_data_five_bytes();
+				transmit_valid <= '1';
+			
+				if transmit_ready = '1' then
+					transmit_valid <= '0';
+					transmit_state <= s_second;
+				end if;
+			
+			when s_second =>
+			
+				--transmit_data <= transmit_data_five_bytes();
+				transmit_valid <= '1';
+			
+				if transmit_ready = '1' then
+					transmit_valid <= '0';
+					transmit_state <= s_third;
+				end if;
+			
+			when s_third =>
+			
+				--transmit_data <= transmit_data_five_bytes();
+				transmit_valid <= '1';
+			
+				if transmit_ready = '1' then
+					transmit_valid <= '0';
+					transmit_state <= s_fourth;
+				end if;
+			
+			when s_fourth =>
+			
+				--transmit_data <= transmit_data_five_bytes();
+				transmit_valid <= '1';
+			
+				if transmit_ready = '1' then
+					transmit_valid <= '0';
+					transmit_state <= s_fifth;
+				end if;
+				
+			when s_fifth =>
+			
+				--transmit_data <= transmit_data_five_bytes();
+				transmit_valid <= '1';
+			
+				if transmit_ready = '1' then
+					transmit_valid <= '0';
+					transmit_state <= s_idle;
+				end if;
+			
+			when others =>
+			
+				transmit_state <= s_idle;
+			
+			end case;
+			
 			end if;
 		
 		end process p_transmit_data;
