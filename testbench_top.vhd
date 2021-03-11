@@ -524,7 +524,7 @@ begin -- architecture
       key_n                   => key_n,
 
       -- Switch input
-      --sw                      => sw,
+      sw                      => sw,
 
       -- 7 Segment display output
       hex0                    => hex0,

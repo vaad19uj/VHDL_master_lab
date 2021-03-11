@@ -9,10 +9,8 @@ entity top_level is
 		clock_50 		: in std_logic;	-- connected to internal PLL
 		key_n 			: in std_logic_vector(3 downto 0);	
 		fpga_in_rx 		: in std_logic;	-- serial input data
-		
+		sw					: in std_logic_vector(9 downto 0);
 		fpga_out_tx 	: out std_logic;	-- serial output data
-		--ledg0 			: out std_logic; 
-		--ledr0 			: out std_logic;
 		ledr           : out std_logic_vector(9 downto 0);
 		ledg           : out std_logic_vector(7 downto 0);
 		hex0 				: out std_logic_vector(6 downto 0);
