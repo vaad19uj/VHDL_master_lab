@@ -29,14 +29,15 @@ architecture rtl of pwm_ctrl is
 
 	--signals
 	signal pwm_duty_cycle_percent 					: natural range 0 to 100 := 0;
-	signal pwm_last_duty_cycle_percent				: natural range 0 to 100 := 0;
+	signal pwm_last_duty_cycle_percent				: natural range 0 to 100 := 100;
 	signal update_last_on_percent						: std_logic;
-	signal pwm_counter									: integer range 0 to c_cnt_max; -- used for LED
-	signal pwm_counter_last								: integer range 0 to c_cnt_max; -- used for LED
+	signal pwm_counter									: integer range 0 to c_cnt_max := 0; -- used for LED
+	signal pwm_counter_last								: integer range 0 to c_cnt_max := 49999; -- used for LED
 	signal period_counter								: integer range 0 to c_cnt_max := 0;
 	signal tick_1ms										: std_logic := '1';
 	signal last_sent_pwm									: integer range 0 to 100 := 0;
 	signal pulse											: std_logic;
+	signal counter 										: natural range 0 to c_cnt_max;
 	
 	begin 
 	
@@ -69,10 +70,12 @@ architecture rtl of pwm_ctrl is
 		
 		p_tick : process(clk, period_counter)
 		begin
-			if period_counter = c_cnt_max then
+			if counter = c_cnt_max then
 				tick_1ms <= '1';
+				counter <= 0;
 			else
 				tick_1ms <= '0';
+				counter <= counter +1;
 			end if;
 		end process p_tick;
 		

@@ -48,7 +48,7 @@ architecture rtl of dc_disp_ctrl is
 	signal bcd_0								: std_logic_vector(3 downto 0);
 	signal bcd_1								: std_logic_vector(3 downto 0);
 	signal bcd_2								: std_logic_vector(3 downto 0);
-	signal bcd									: std_logic_vector(7 downto 0);
+--	signal bcd									: std_logic_vector(7 downto 0);
 	signal dc0									: integer range 0 to 9;
 	signal dc1									: integer range 0 to 9;
 	signal dc2									: integer range 0 to 1;
@@ -73,7 +73,7 @@ architecture rtl of dc_disp_ctrl is
 		port map(
 			clk                     => clk,
 			reset                   => reset, 
-			input_vector            =>	bcd,
+			input_vector            =>	current_dc,
 			valid_in                => valid_in,
 			ready                   => ready,
 			bcd_0                   => bcd_0,
@@ -83,42 +83,79 @@ architecture rtl of dc_disp_ctrl is
 		); 
 		
 		
+		
 		p_bcd : process(clk)
 		begin
 			if rising_edge(clk) then
-			
 				case bcd_state is
-				
-				when s_idle =>
-				
-				bcd <= current_dc;
-				
-					--if current_dc_update = '1' then
-						valid_in <= '1';
-						bcd_state <= s_wait;
-					--end if;
-				
-				when s_wait =>
 					
-					valid_in <= '0';
-					if valid_out = '1' then
-						bcd_state <= s_done;
-					end if;
-				
-				when s_done =>
-				
-					dc0 <= to_integer(unsigned(bcd_0));
-					dc1 <= to_integer(unsigned(bcd_1));
-					dc2 <= to_integer(unsigned(bcd_2));
-					bcd_state <= s_idle;
+					when s_idle =>
 					
-				when others =>
-				
-					bcd_state <= s_idle;
+						if ready = '1' and current_dc_update = '1' then
+							bcd_state <= s_wait;
+							valid_in <= '1';
+						end if;
 					
+					when s_wait =>
+					
+						valid_in <= '0';
+					
+						if valid_out = '1' then
+							bcd_state <= s_done;
+						end if;
+					
+					when s_done =>
+					
+						dc0 <= to_integer(unsigned(bcd_0));
+						dc1 <= to_integer(unsigned(bcd_1));
+						dc2 <= to_integer(unsigned(bcd_2));
+						bcd_state <= s_idle;
+					
+					when others =>
+					
+						bcd_state <= s_idle;
+				
 				end case;
 			end if;
 		end process p_bcd;
+		
+		
+--		p_bcd : process(clk)
+--		begin
+--			if rising_edge(clk) then
+--			
+--				case bcd_state is
+--				
+--				when s_idle =>
+--				
+--				bcd <= current_dc;
+--				
+--					--if current_dc_update = '1' then
+--						valid_in <= '1';
+--						bcd_state <= s_wait;
+--					--end if;
+--				
+--				when s_wait =>
+--					
+--					valid_in <= '0';
+--					if valid_out = '1' then
+--						bcd_state <= s_done;
+--					end if;
+--				
+--				when s_done =>
+--				
+--					dc0 <= to_integer(unsigned(bcd_0));
+--					dc1 <= to_integer(unsigned(bcd_1));
+--					dc2 <= to_integer(unsigned(bcd_2));
+--					bcd_state <= s_idle;
+--					
+--				when others =>
+--				
+--					bcd_state <= s_idle;
+--					
+--				end case;
+--			end if;
+--		end process p_bcd;
 		
 		p_transmit_data : process(reset, clk)
 		begin
