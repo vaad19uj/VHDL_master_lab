@@ -509,6 +509,7 @@ begin -- architecture
    end process p_test_main;
 
    key_n <= key_up_n & key_down_n & key_on_n & key_off_n;
+	sw <= (others => '0');
 
    i_pwm_module : entity work.top_level
    generic map(

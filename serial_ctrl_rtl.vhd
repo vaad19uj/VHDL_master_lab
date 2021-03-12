@@ -29,7 +29,7 @@ architecture rtl of serial_ctrl is
 	begin
 	
 		if rising_edge(clk) then
-			--if received_valid = '1' then
+			if received_valid = '1' then
 				case received_data is
 				
 				-- ASCII U 
@@ -102,7 +102,14 @@ architecture rtl of serial_ctrl is
 					serial_on <= '0';
 				
 				end case;
-			--end if;
+				
+			else
+				serial_up <= '0';
+				serial_down <= '0';
+				serial_off <= '0';
+				serial_on <= '0';
+				
+			end if;
 		end if;
 	
 	end process p_serial_ctrl;

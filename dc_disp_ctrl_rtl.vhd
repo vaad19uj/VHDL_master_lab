@@ -22,6 +22,7 @@ architecture rtl of dc_disp_ctrl is
 	-- types
 	type t_bcd_state is (s_idle, s_wait, s_done);
 	type t_transmit_byte_state is (s_idle, s_first, s_second, s_third, s_fourth, s_fifth);
+	--type t_transmit_byte_state is (s_idle, s_hundreds, s_tens, s_ones, s_percent, s_carriage_return);
 	
 	-- components
 	component bcd_decode is
@@ -82,6 +83,246 @@ architecture rtl of dc_disp_ctrl is
 			valid_out               => valid_out
 		); 
 		
+		
+--		p_serial : process(clk)
+--		begin
+--		
+--			if rising_edge(clk) then
+--			
+--			transmit_valid <= '0';
+--			
+--				case transmit_state is
+--				
+--				when s_idle =>
+--					
+--					if transmit_ready = '1' then
+--						transmit_state <= s_hundreds;
+--					end if;
+--				
+--					transmit_valid <= '0';
+--				
+--				when s_hundreds =>
+--				
+--					case dc2 is
+--					
+--						when 0 =>
+--						
+--							transmit_data <= space;
+--							transmit_valid <= '1';
+--							transmit_state <= s_tens;
+--							hex2 <= (6 => '1', others => '0');
+--					
+--						when 1 =>
+--							
+--							transmit_data <= X"31";
+--							transmit_valid <= '1';
+--							hex2 <= (1 => '0', 2 => '0', others => '1');
+--							transmit_state <= s_tens;
+--							
+--						when others =>
+--						
+--							transmit_valid <= '0';
+--					
+--					end case;
+--				
+--				when s_tens =>
+--				
+--					case dc1 is
+--						
+--						when 0 =>
+--							
+--							transmit_data <= X"30";
+--							transmit_valid <= '1';
+--							transmit_state <= s_ones;
+--							hex1 <= (6 => '1', others => '0');
+--							
+--						
+--						when 1 =>
+--						
+--							transmit_data <= X"31";
+--							transmit_valid <= '1';
+--							transmit_state <= s_ones;
+--							hex1 <= (1 => '0', 2 => '0', others => '1');
+--						
+--						when 2 =>
+--						
+--							transmit_data <= X"32";
+--							transmit_valid <= '1';
+--							transmit_state <= s_ones;
+--							hex1 <= (0 => '0', 1 => '0', 6 => '0', 4 => '0', 3 => '0', others => '1');
+--						
+--						when 3 =>
+--						
+--							transmit_data <= X"33";
+--							transmit_valid <= '1';
+--							transmit_state <= s_ones;
+--							hex1 <= (0 => '0', 1 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
+--						
+--						when 4 =>
+--							
+--							transmit_data <= X"34";
+--							transmit_valid <= '1';
+--							transmit_state <= s_ones;
+--							hex1 <= (5 => '0', 6 => '0', 1 => '0', 2 => '0', others => '1');
+--						
+--						when 5 =>
+--						
+--							transmit_data <= X"35";
+--							transmit_valid <= '1';
+--							transmit_state <= s_ones;
+--							hex1 <= (0 => '0', 5 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
+--						
+--						when 6 =>
+--						
+--							transmit_data <= X"36";
+--							transmit_valid <= '1';
+--							transmit_state <= s_ones;
+--							hex1 <= (0 => '0', 5 => '0', 6 => '0', 4 => '0', 3 => '0', 2 => '0', others => '1');
+--						
+--						when 7 =>
+--						
+--							transmit_data <= X"37";
+--							transmit_valid <= '1';
+--							transmit_state <= s_ones;
+--							hex1 <= (0 => '0', 1 => '0', 2 => '0', others => '1');
+--						
+--						when 8 =>
+--							
+--							transmit_data <= X"38";
+--							transmit_valid <= '1';
+--							transmit_state <= s_ones;
+--							hex1 <= (others => '0');
+--						
+--						when 9 =>
+--						
+--							transmit_data <= X"39";
+--							transmit_valid <= '1';
+--							transmit_state <= s_ones;
+--							hex1 <= (4 => '1', others => '0');
+--						
+--						when others =>
+--						
+--							transmit_valid <= '0';
+--							-- "-" for other ASCII values
+--							hex1 <= (6 => '0', others => '1');
+--					
+--					end case;
+--				
+--				when s_ones =>
+--				
+--					case dc0 is
+--						
+--						when 0 =>
+--							
+--							transmit_data <= X"30";
+--							transmit_valid <= '1';
+--							transmit_state <= s_percent;
+--							hex0 <= (6 => '1', others => '0');
+--							
+--						
+--						when 1 =>
+--						
+--							transmit_data <= X"31";
+--							transmit_valid <= '1';
+--							transmit_state <= s_percent;
+--							hex0 <= (1 => '0', 2 => '0', others => '1');
+--						
+--						when 2 =>
+--						
+--							transmit_data <= X"32";
+--							transmit_valid <= '1';
+--							transmit_state <= s_percent;
+--							hex0 <= (0 => '0', 1 => '0', 6 => '0', 4 => '0', 3 => '0', others => '1');
+--						
+--						when 3 =>
+--						
+--							transmit_data <= X"33";
+--							transmit_valid <= '1';
+--							transmit_state <= s_percent;
+--							hex0 <= (0 => '0', 1 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
+--						
+--						when 4 =>
+--							
+--							transmit_data <= X"34";
+--							transmit_valid <= '1';
+--							transmit_state <= s_percent;
+--							hex0 <= (5 => '0', 6 => '0', 1 => '0', 2 => '0', others => '1');
+--						
+--						when 5 =>
+--						
+--							transmit_data <= X"35";
+--							transmit_valid <= '1';
+--							transmit_state <= s_percent;
+--							hex0 <= (0 => '0', 5 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
+--						
+--						when 6 =>
+--						
+--							transmit_data <= X"36";
+--							transmit_valid <= '1';
+--							transmit_state <= s_percent;
+--							hex0 <= (0 => '0', 5 => '0', 6 => '0', 4 => '0', 3 => '0', 2 => '0', others => '1');
+--						
+--						when 7 =>
+--						
+--							transmit_data <= X"37";
+--							transmit_valid <= '1';
+--							transmit_state <= s_percent;
+--							hex0 <= (0 => '0', 1 => '0', 2 => '0', others => '1');
+--						
+--						when 8 =>
+--							
+--							transmit_data <= X"38";
+--							transmit_valid <= '1';
+--							transmit_state <= s_percent;
+--							hex0 <= (others => '0');
+--						
+--						when 9 =>
+--						
+--							transmit_data <= X"39";
+--							transmit_valid <= '1';
+--							transmit_state <= s_percent;
+--							hex0 <= (4 => '1', others => '0');
+--						
+--						when others =>
+--						
+--							transmit_valid <= '0';
+--							-- "-" for other ASCII values
+--							hex0 <= (6 => '0', others => '1');
+--					
+--					end case;
+--				
+--				when s_percent =>
+--				
+--					transmit_data <= percent;
+--					transmit_valid <= '1';
+--				
+--				when s_carriage_return =>
+--					
+--					transmit_data <= carriage_return;
+--					transmit_valid <= '1';
+--				
+--				end case;
+--			
+--			end if;
+--		end process p_serial;
+--		
+--		
+--		p_convert_to_int : process(clk)
+--		begin
+--		
+--			if rising_edge(clk) then
+--				if current_dc_update = '1' then
+--					valid_in <= ready;
+--					if valid_out = '1' then
+--						dc0 <= to_integer(unsigned(bcd_0));
+--						dc1 <= to_integer(unsigned(bcd_1));
+--						dc2 <= to_integer(unsigned(bcd_2));
+--					end if;
+--				else
+--					valid_in <= '0';
+--				end if;
+--			end if;
+--		end process p_convert_to_int;
 		
 		
 		p_bcd : process(clk)
@@ -157,77 +398,83 @@ architecture rtl of dc_disp_ctrl is
 --			end if;
 --		end process p_bcd;
 		
-		p_transmit_data : process(reset, clk)
+		p_transmit_data : process(clk, transmit_ready)
 		begin
-			if rising_edge(clk) and transmit_ready = '1' then
+			if rising_edge(clk) then
 			
-			case transmit_state is
-				
-			when s_idle =>
+				if transmit_ready = '1' then
 			
-				transmit_valid <= '0';
-				transmit <= '0';
-				
-			--	if transmit_ready = '1' then
-					transmit_state <= s_first;
-				--end if;
+					transmit_valid <= '0';
+					
+					case transmit_state is
+						
+					when s_idle =>
+					
+						transmit_valid <= '0';
+						transmit <= '0';
+						
+					--	if transmit_ready = '1' then
+							transmit_state <= s_first;
+						--end if;
+					
+					when s_first =>
+						
+						transmit <= '1';
+						transmit_data <= transmit_data_byte1;
+						transmit_valid <= '1';
+					
+						--if transmit_ready = '1' then
+							--transmit_valid <= '0';
+							transmit_state <= s_second;
+					--	end if;
+					
+					when s_second =>
+					
+						transmit_data <= transmit_data_byte2;
+						transmit_valid <= '1';
+					
+		--				if transmit_ready = '1' then
+		--					transmit_valid <= '0';
+							transmit_state <= s_third;
+		--				end if;
+					
+					when s_third =>
+					
+						transmit_data <= transmit_data_byte3;
+						transmit_valid <= '1';
+					
+		--				if transmit_ready = '1' then
+		--					transmit_valid <= '0';
+							transmit_state <= s_fourth;
+		--				end if;
+					
+					when s_fourth =>
+					
+						transmit_data <= transmit_data_byte4;
+						transmit_valid <= '1';
+					
+		--				if transmit_ready = '1' then
+		--					transmit_valid <= '0';
+							transmit_state <= s_fifth;
+		--				end if;
+						
+					when s_fifth =>
+					
+						transmit_data <= transmit_data_byte5;
+						transmit_valid <= '1';
+					
+		--				if transmit_ready = '1' then
+		--					transmit_valid <= '0';
+							transmit_state <= s_idle;
+		--				end if;
+					
+					when others =>
+						transmit <= '0';
+						transmit_state <= s_idle;
+					
+					end case;
 			
-			when s_first =>
-				
-				transmit <= '1';
-				transmit_data <= transmit_data_byte1;
-				transmit_valid <= '1';
-			
-				--if transmit_ready = '1' then
-					--transmit_valid <= '0';
-					transmit_state <= s_second;
-			--	end if;
-			
-			when s_second =>
-			
-				transmit_data <= transmit_data_byte2;
-				transmit_valid <= '1';
-			
---				if transmit_ready = '1' then
---					transmit_valid <= '0';
-					transmit_state <= s_third;
---				end if;
-			
-			when s_third =>
-			
-				transmit_data <= transmit_data_byte3;
-				transmit_valid <= '1';
-			
---				if transmit_ready = '1' then
---					transmit_valid <= '0';
-					transmit_state <= s_fourth;
---				end if;
-			
-			when s_fourth =>
-			
-				transmit_data <= transmit_data_byte4;
-				transmit_valid <= '1';
-			
---				if transmit_ready = '1' then
---					transmit_valid <= '0';
-					transmit_state <= s_fifth;
---				end if;
-				
-			when s_fifth =>
-			
-				transmit_data <= transmit_data_byte5;
-				transmit_valid <= '1';
-			
---				if transmit_ready = '1' then
---					transmit_valid <= '0';
-					transmit_state <= s_idle;
---				end if;
-			
-			when others =>
-				transmit <= '0';
-				transmit_state <= s_idle;
-			
-			end case;
+				end if;
 			
 			end if;
 		
@@ -239,9 +486,9 @@ architecture rtl of dc_disp_ctrl is
 
 			if rising_edge(clk) then
 			
-				if current_dc_update = '1' then -- if we have an updated dc value
-				
 				dc <= to_integer(unsigned(current_dc));
+			
+				if current_dc_update = '1' then -- if we have an updated dc value
 				
 					if transmit = '0' then			-- only change values when not busy transmitting
 					
@@ -302,50 +549,50 @@ architecture rtl of dc_disp_ctrl is
 				if reset = '1' then
 					-- zero
 					hex0 <= (others => '1');
-					ASCII_dc_0 <= "00110000";
+					ASCII_dc_0 <= X"30";
 					
 				else
 					case dc0 is
 						when 0 =>
 						-- zero
-							ASCII_dc_0 <= "00110000";
+							ASCII_dc_0 <= X"30";
 							hex0 <= (6 => '1', others => '0');
 						when 1 =>
 						-- one
-							ASCII_dc_0 <= "00110001";
+							ASCII_dc_0 <= X"31";
 							hex0 <= (1 => '0', 2 => '0', others => '1');
 						when 2 =>
 						-- two
 						-- two 
-							ASCII_dc_0 <= "00110010";
+							ASCII_dc_0 <= X"32";
 							hex0 <= (0 => '0', 1 => '0', 6 => '0', 4 => '0', 3 => '0', others => '1');
 						when 3 =>
 						-- three
-							ASCII_dc_0 <= "00110011";
+							ASCII_dc_0 <= X"33";
 							hex0 <= (0 => '0', 1 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
 						when 4 =>
 						-- four
-							ASCII_dc_0 <= "00110100";
+							ASCII_dc_0 <= X"34";
 							hex0 <= (5 => '0', 6 => '0', 1 => '0', 2 => '0', others => '1');
 						when 5 =>
 						-- five
-							ASCII_dc_0 <= "00110101";
+							ASCII_dc_0 <= X"35";
 							hex0 <= (0 => '0', 5 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
 						when 6 =>
 						-- six
-							ASCII_dc_0 <= "00110110";
+							ASCII_dc_0 <= X"36";
 							hex0 <= (0 => '0', 5 => '0', 6 => '0', 4 => '0', 3 => '0', 2 => '0', others => '1');
 						when 7 =>
 						-- seven
-							ASCII_dc_0 <= "00110111";
+							ASCII_dc_0 <= X"37";
 							hex0 <= (0 => '0', 1 => '0', 2 => '0', others => '1');
 						when 8 =>
 						-- eight
-							ASCII_dc_0 <= "00111000";
+							ASCII_dc_0 <= X"38";
 							hex0 <= (others => '0');
 						when 9 =>
 						-- nine
-							ASCII_dc_0 <= "00111001";
+							ASCII_dc_0 <= X"39";
 							hex0 <= (4 => '1', others => '0');
 						when others =>
 							-- turned off
@@ -362,50 +609,50 @@ architecture rtl of dc_disp_ctrl is
 				if reset = '1' then
 					-- zero
 					hex1 <= (6 => '1', others => '0');
-					ASCII_dc_1 <= "00110000";
+					ASCII_dc_1 <= X"30";
 					
 				else
 					case dc1 is
 						when 0 =>
 						-- zero
-							ASCII_dc_1 <= "00110000";
+							ASCII_dc_1 <= X"30";
 							hex1 <= (6 => '1', others => '0');
 						when 1 =>
 						-- one
-							ASCII_dc_1 <= "00110001";
+							ASCII_dc_1 <= X"31";
 							hex1 <= (1 => '0', 2 => '0', others => '1');
 						when 2 =>
 						-- two
 						-- two 
-							ASCII_dc_1 <= "00110010";
+							ASCII_dc_1 <= X"32";
 							hex1 <= (0 => '0', 1 => '0', 6 => '0', 4 => '0', 3 => '0', others => '1');
 						when 3 =>
 						-- three
-							ASCII_dc_1 <= "00110011";
+							ASCII_dc_1 <= X"33";
 							hex1 <= (0 => '0', 1 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
 						when 4 =>
 						-- four
-							ASCII_dc_1 <= "00110100";
+							ASCII_dc_1 <= X"34";
 							hex1 <= (5 => '0', 6 => '0', 1 => '0', 2 => '0', others => '1');
 						when 5 =>
 						-- five
-							ASCII_dc_1 <= "00110101";
+							ASCII_dc_1 <= X"35";
 							hex1 <= (0 => '0', 5 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
 						when 6 =>
 						-- six
-							ASCII_dc_1 <= "00110110";
+							ASCII_dc_1 <= X"36";
 							hex1 <= (0 => '0', 5 => '0', 6 => '0', 4 => '0', 3 => '0', 2 => '0', others => '1');
 						when 7 =>
 						-- seven
-							ASCII_dc_1 <= "00110111";
+							ASCII_dc_1 <= X"37";
 							hex1 <= (0 => '0', 1 => '0', 2 => '0', others => '1');
 						when 8 =>
 						-- eight
-							ASCII_dc_1 <= "00111000";
+							ASCII_dc_1 <= X"38";
 							hex1 <= (others => '0');
 						when 9 =>
 						-- nine
-							ASCII_dc_1 <= "00111001";
+							ASCII_dc_1 <= X"39";
 							hex1 <= (4 => '1', others => '0');
 						when others =>
 							-- turned off
@@ -415,18 +662,18 @@ architecture rtl of dc_disp_ctrl is
 			end if;
 		end process p_current_dc1;
 			
-		p_current_dc2 : process(clk, reset, dc2)
+		p_current_dc2 : process(clk, reset)
 		begin
 			if reset = '1' then
 				-- zero
-				ASCII_dc_2 <= "00110000";
+				ASCII_dc_2 <= X"30";
 				hex2 <= (others => '1');
 			elsif dc2 = 1 then
-				ASCII_dc_2 <= "00110001";
+				ASCII_dc_2 <= X"31";
 				hex2 <= (1 => '0', 2 => '0', others => '1');
 			elsif dc2 = 0 then
 				-- zero
-				ASCII_dc_2 <= "00110000";
+				ASCII_dc_2 <= X"30";
 				hex2 <= (6 => '1', others => '0');
 			else
 				-- turned off

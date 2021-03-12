@@ -1,5 +1,5 @@
 Flow report for Lab7
-Thu Mar 11 14:52:01 2021
+Fri Mar 12 09:11:58 2021
 Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
 
 
@@ -40,7 +40,7 @@ applicable agreement for further details.
 +--------------------------------------------------------------------------------------+
 ; Flow Summary                                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Flow Status                        ; Successful - Thu Mar 11 14:52:01 2021           ;
+; Flow Status                        ; Successful - Fri Mar 12 09:11:58 2021           ;
 ; Quartus II 64-Bit Version          ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition ;
 ; Revision Name                      ; Lab7                                            ;
 ; Top-level Entity Name              ; top_level                                       ;
@@ -49,8 +49,8 @@ applicable agreement for further details.
 ; Timing Models                      ; Final                                           ;
 ; Total logic elements               ; 499                                             ;
 ;     Total combinational functions  ; 454                                             ;
-;     Dedicated logic registers      ; 267                                             ;
-; Total registers                    ; 267                                             ;
+;     Dedicated logic registers      ; 268                                             ;
+; Total registers                    ; 268                                             ;
 ; Total pins                         ; 56                                              ;
 ; Total virtual pins                 ; 0                                               ;
 ; Total memory bits                  ; 0                                               ;
@@ -64,7 +64,7 @@ applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 03/11/2021 14:51:56 ;
+; Start date & time ; 03/12/2021 09:11:50 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; Lab7                ;
 +-------------------+---------------------+
@@ -75,7 +75,7 @@ applicable agreement for further details.
 +-------------------------------------+--------------------------------+---------------+-------------+----------------+
 ; Assignment Name                     ; Value                          ; Default Value ; Entity Name ; Section Id     ;
 +-------------------------------------+--------------------------------+---------------+-------------+----------------+
-; COMPILER_SIGNATURE_ID               ; 93383152083324.161547071616252 ; --            ; --          ; --             ;
+; COMPILER_SIGNATURE_ID               ; 93383152083324.161553671002648 ; --            ; --          ; --             ;
 ; EDA_OUTPUT_DATA_FORMAT              ; Vhdl                           ; --            ; --          ; eda_simulation ;
 ; EDA_SIMULATION_TOOL                 ; ModelSim-Altera (VHDL)         ; <None>        ; --          ; --             ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                             ; --            ; --          ; --             ;
@@ -93,8 +93,8 @@ applicable agreement for further details.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:00:05     ; 1.0                     ; 4649 MB             ; 00:00:05                           ;
-; Total                ; 00:00:05     ; --                      ; --                  ; 00:00:05                           ;
+; Analysis & Synthesis ; 00:00:08     ; 1.0                     ; 4645 MB             ; 00:00:06                           ;
+; Total                ; 00:00:08     ; --                      ; --                  ; 00:00:06                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

@@ -55,6 +55,7 @@ architecture rtl of pwm_ctrl is
 				end if;
 			end if;
 		end process p_pulse;
+
 		
 		p_counter : process(clk)
 		begin
@@ -68,22 +69,22 @@ architecture rtl of pwm_ctrl is
 		end process p_counter;
 		
 		
-		p_tick : process(clk, period_counter)
+		p_tick : process(clk)
 		begin
 			if counter = c_cnt_max then
 				tick_1ms <= '1';
 				counter <= 0;
 			else
 				tick_1ms <= '0';
-				counter <= counter +1;
+				counter <= counter + 1;
 			end if;
 		end process p_tick;
 		
-		p_send : process(clk, tick_1ms)
+		p_send : process(clk)
 		begin
 			if rising_edge(clk) then
 
-				if tick_1ms = '0' then
+				if tick_1ms = '1' then
 				--if (tick_1ms = '0') and pwm_last_duty_cycle_percent /= last_sent_pwm then --??????
 				
 					--last_sent_pwm <= pwm_duty_cycle_percent;
