@@ -62,6 +62,7 @@ architecture rtl of dc_disp_ctrl is
 	signal transmit_state					: t_transmit_byte_state := s_idle;
 	signal dc									: integer range 0 to 100 := 0;
 	signal transmit							: std_logic := '0'; -- flag to check transmit
+	signal send_byte							: std_logic := '0';
 	
 	-- constants
 	constant percent		 			: std_logic_vector(7 downto 0) := X"25";	
@@ -398,13 +399,11 @@ architecture rtl of dc_disp_ctrl is
 --			end if;
 --		end process p_bcd;
 		
-		p_transmit_data : process(clk, transmit_ready)
+		p_transmit_data : process(clk)
 		begin
 			if rising_edge(clk) then
 			
 				if transmit_ready = '1' then
-			
-					transmit_valid <= '0';
 					
 					case transmit_state is
 						
@@ -413,7 +412,7 @@ architecture rtl of dc_disp_ctrl is
 						transmit_valid <= '0';
 						transmit <= '0';
 						
-					--	if transmit_ready = '1' then
+						--if transmit_ready = '1' then
 							transmit_state <= s_first;
 						--end if;
 					
@@ -426,51 +425,52 @@ architecture rtl of dc_disp_ctrl is
 						--if transmit_ready = '1' then
 							--transmit_valid <= '0';
 							transmit_state <= s_second;
-					--	end if;
+						--end if;
 					
 					when s_second =>
 					
 						transmit_data <= transmit_data_byte2;
-						transmit_valid <= '1';
+						--transmit_valid <= '1';
 					
-		--				if transmit_ready = '1' then
-		--					transmit_valid <= '0';
+						--if transmit_ready = '1' then
+							--transmit_valid <= '0';
 							transmit_state <= s_third;
-		--				end if;
+						--end if;
 					
 					when s_third =>
 					
 						transmit_data <= transmit_data_byte3;
-						transmit_valid <= '1';
+						--transmit_valid <= '1';
 					
-		--				if transmit_ready = '1' then
-		--					transmit_valid <= '0';
+						--if transmit_ready = '1' then
+							--transmit_valid <= '0';
 							transmit_state <= s_fourth;
-		--				end if;
+						--end if;
 					
 					when s_fourth =>
 					
 						transmit_data <= transmit_data_byte4;
-						transmit_valid <= '1';
+						--transmit_valid <= '1';
 					
-		--				if transmit_ready = '1' then
-		--					transmit_valid <= '0';
+						--if transmit_ready = '1' then
+							--transmit_valid <= '0';
 							transmit_state <= s_fifth;
-		--				end if;
+						--end if;
 						
 					when s_fifth =>
 					
 						transmit_data <= transmit_data_byte5;
-						transmit_valid <= '1';
+						--transmit_valid <= '1';
 					
-		--				if transmit_ready = '1' then
-		--					transmit_valid <= '0';
+						--if transmit_ready = '1' then
+							--transmit_valid <= '0';
 							transmit_state <= s_idle;
-		--				end if;
+						--end if;
 					
 					when others =>
 						transmit <= '0';
 						transmit_state <= s_idle;
+						transmit_valid <= '0';
 					
 					end case;
 			
@@ -486,9 +486,9 @@ architecture rtl of dc_disp_ctrl is
 
 			if rising_edge(clk) then
 			
-				dc <= to_integer(unsigned(current_dc));
-			
 				if current_dc_update = '1' then -- if we have an updated dc value
+				
+				dc <= to_integer(unsigned(current_dc));
 				
 					if transmit = '0' then			-- only change values when not busy transmitting
 					
@@ -499,6 +499,7 @@ architecture rtl of dc_disp_ctrl is
 							transmit_data_byte3 <= ASCII_dc_0;
 							transmit_data_byte4 <= percent;
 							transmit_data_byte5 <= carriage_return;
+							--send_byte <= '1';
 						
 						else 
 							-- 0-9
@@ -508,6 +509,7 @@ architecture rtl of dc_disp_ctrl is
 								transmit_data_byte3 <= ASCII_dc_0;
 								transmit_data_byte4 <= percent;
 								transmit_data_byte5 <= carriage_return;
+								send_byte <= '1';
 						
 							-- 10-99
 							elsif dc > 9 and dc < 100 then
@@ -517,6 +519,7 @@ architecture rtl of dc_disp_ctrl is
 								transmit_data_byte3 <= ASCII_dc_0;
 								transmit_data_byte4 <= percent;
 								transmit_data_byte5 <= carriage_return;
+								--send_byte <= '1';
 						
 							-- 100
 							elsif dc = 100 then
@@ -525,6 +528,7 @@ architecture rtl of dc_disp_ctrl is
 								transmit_data_byte3 <= ASCII_dc_0;
 								transmit_data_byte4 <= percent;
 								transmit_data_byte5 <= carriage_return;
+								--send_byte <= '1';
 							end if;
 						end if;
 						
@@ -534,9 +538,6 @@ architecture rtl of dc_disp_ctrl is
 --							information have been fully transmitted on the serial interface the serial send shall be 
 --							directly started again when finished in order to update the serial 
 --							interface with the latest information. 
-
-
-							-- if transmit = '0'???
 						
 					end if;
 				end if;

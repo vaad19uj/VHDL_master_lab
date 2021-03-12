@@ -47,10 +47,8 @@ architecture rtl of pwm_ctrl is
 		begin
 			if rising_edge(clk) then
 				if(pwm_counter > period_counter) then
-					--ledg0 <= '1';
 					pulse <= '1';
 				else
-					--ledg0 <= '0';
 					pulse <= '0';
 				end if;
 			end if;
@@ -71,12 +69,15 @@ architecture rtl of pwm_ctrl is
 		
 		p_tick : process(clk)
 		begin
-			if counter = c_cnt_max then
-				tick_1ms <= '1';
-				counter <= 0;
-			else
-				tick_1ms <= '0';
-				counter <= counter + 1;
+		
+			if rising_edge (clk) then
+				if counter = c_cnt_max then
+					tick_1ms <= '1';
+					counter <= 0;
+				else
+					tick_1ms <= '0';
+					counter <= counter + 1;
+				end if;
 			end if;
 		end process p_tick;
 		
@@ -85,9 +86,6 @@ architecture rtl of pwm_ctrl is
 			if rising_edge(clk) then
 
 				if tick_1ms = '1' then
-				--if (tick_1ms = '0') and pwm_last_duty_cycle_percent /= last_sent_pwm then --??????
-				
-					--last_sent_pwm <= pwm_duty_cycle_percent;
 					current_dc_update <= '1';
 					current_dc <= std_logic_vector(to_unsigned(pwm_duty_cycle_percent, current_dc'length));
 					
