@@ -53,6 +53,7 @@ architecture rtl of dc_disp_ctrl is
 	signal dc0									: integer range 0 to 9;
 	signal dc1									: integer range 0 to 9;
 	signal dc2									: integer range 0 to 1;
+	signal dc_valid 						   : std_logic;
 	signal bcd_state 							: t_bcd_state := s_idle;
 	signal transmit_data_byte1				: std_logic_vector(7 downto 0);
 	signal transmit_data_byte2				: std_logic_vector(7 downto 0);
@@ -76,7 +77,7 @@ architecture rtl of dc_disp_ctrl is
 			clk                     => clk,
 			reset                   => reset, 
 			input_vector            =>	current_dc,
-			valid_in                => valid_in,
+			valid_in                => current_dc_update,
 			ready                   => ready,
 			bcd_0                   => bcd_0,
 			bcd_1                   => bcd_1,
@@ -85,319 +86,47 @@ architecture rtl of dc_disp_ctrl is
 		); 
 		
 		
---		p_serial : process(clk)
---		begin
---		
---			if rising_edge(clk) then
---			
---			transmit_valid <= '0';
---			
---				case transmit_state is
---				
---				when s_idle =>
---					
---					if transmit_ready = '1' then
---						transmit_state <= s_hundreds;
---					end if;
---				
---					transmit_valid <= '0';
---				
---				when s_hundreds =>
---				
---					case dc2 is
---					
---						when 0 =>
---						
---							transmit_data <= space;
---							transmit_valid <= '1';
---							transmit_state <= s_tens;
---							hex2 <= (6 => '1', others => '0');
---					
---						when 1 =>
---							
---							transmit_data <= X"31";
---							transmit_valid <= '1';
---							hex2 <= (1 => '0', 2 => '0', others => '1');
---							transmit_state <= s_tens;
---							
---						when others =>
---						
---							transmit_valid <= '0';
---					
---					end case;
---				
---				when s_tens =>
---				
---					case dc1 is
---						
---						when 0 =>
---							
---							transmit_data <= X"30";
---							transmit_valid <= '1';
---							transmit_state <= s_ones;
---							hex1 <= (6 => '1', others => '0');
---							
---						
---						when 1 =>
---						
---							transmit_data <= X"31";
---							transmit_valid <= '1';
---							transmit_state <= s_ones;
---							hex1 <= (1 => '0', 2 => '0', others => '1');
---						
---						when 2 =>
---						
---							transmit_data <= X"32";
---							transmit_valid <= '1';
---							transmit_state <= s_ones;
---							hex1 <= (0 => '0', 1 => '0', 6 => '0', 4 => '0', 3 => '0', others => '1');
---						
---						when 3 =>
---						
---							transmit_data <= X"33";
---							transmit_valid <= '1';
---							transmit_state <= s_ones;
---							hex1 <= (0 => '0', 1 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
---						
---						when 4 =>
---							
---							transmit_data <= X"34";
---							transmit_valid <= '1';
---							transmit_state <= s_ones;
---							hex1 <= (5 => '0', 6 => '0', 1 => '0', 2 => '0', others => '1');
---						
---						when 5 =>
---						
---							transmit_data <= X"35";
---							transmit_valid <= '1';
---							transmit_state <= s_ones;
---							hex1 <= (0 => '0', 5 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
---						
---						when 6 =>
---						
---							transmit_data <= X"36";
---							transmit_valid <= '1';
---							transmit_state <= s_ones;
---							hex1 <= (0 => '0', 5 => '0', 6 => '0', 4 => '0', 3 => '0', 2 => '0', others => '1');
---						
---						when 7 =>
---						
---							transmit_data <= X"37";
---							transmit_valid <= '1';
---							transmit_state <= s_ones;
---							hex1 <= (0 => '0', 1 => '0', 2 => '0', others => '1');
---						
---						when 8 =>
---							
---							transmit_data <= X"38";
---							transmit_valid <= '1';
---							transmit_state <= s_ones;
---							hex1 <= (others => '0');
---						
---						when 9 =>
---						
---							transmit_data <= X"39";
---							transmit_valid <= '1';
---							transmit_state <= s_ones;
---							hex1 <= (4 => '1', others => '0');
---						
---						when others =>
---						
---							transmit_valid <= '0';
---							-- "-" for other ASCII values
---							hex1 <= (6 => '0', others => '1');
---					
---					end case;
---				
---				when s_ones =>
---				
---					case dc0 is
---						
---						when 0 =>
---							
---							transmit_data <= X"30";
---							transmit_valid <= '1';
---							transmit_state <= s_percent;
---							hex0 <= (6 => '1', others => '0');
---							
---						
---						when 1 =>
---						
---							transmit_data <= X"31";
---							transmit_valid <= '1';
---							transmit_state <= s_percent;
---							hex0 <= (1 => '0', 2 => '0', others => '1');
---						
---						when 2 =>
---						
---							transmit_data <= X"32";
---							transmit_valid <= '1';
---							transmit_state <= s_percent;
---							hex0 <= (0 => '0', 1 => '0', 6 => '0', 4 => '0', 3 => '0', others => '1');
---						
---						when 3 =>
---						
---							transmit_data <= X"33";
---							transmit_valid <= '1';
---							transmit_state <= s_percent;
---							hex0 <= (0 => '0', 1 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
---						
---						when 4 =>
---							
---							transmit_data <= X"34";
---							transmit_valid <= '1';
---							transmit_state <= s_percent;
---							hex0 <= (5 => '0', 6 => '0', 1 => '0', 2 => '0', others => '1');
---						
---						when 5 =>
---						
---							transmit_data <= X"35";
---							transmit_valid <= '1';
---							transmit_state <= s_percent;
---							hex0 <= (0 => '0', 5 => '0', 6 => '0', 2 => '0', 3 => '0', others => '1');
---						
---						when 6 =>
---						
---							transmit_data <= X"36";
---							transmit_valid <= '1';
---							transmit_state <= s_percent;
---							hex0 <= (0 => '0', 5 => '0', 6 => '0', 4 => '0', 3 => '0', 2 => '0', others => '1');
---						
---						when 7 =>
---						
---							transmit_data <= X"37";
---							transmit_valid <= '1';
---							transmit_state <= s_percent;
---							hex0 <= (0 => '0', 1 => '0', 2 => '0', others => '1');
---						
---						when 8 =>
---							
---							transmit_data <= X"38";
---							transmit_valid <= '1';
---							transmit_state <= s_percent;
---							hex0 <= (others => '0');
---						
---						when 9 =>
---						
---							transmit_data <= X"39";
---							transmit_valid <= '1';
---							transmit_state <= s_percent;
---							hex0 <= (4 => '1', others => '0');
---						
---						when others =>
---						
---							transmit_valid <= '0';
---							-- "-" for other ASCII values
---							hex0 <= (6 => '0', others => '1');
---					
---					end case;
---				
---				when s_percent =>
---				
---					transmit_data <= percent;
---					transmit_valid <= '1';
---				
---				when s_carriage_return =>
---					
---					transmit_data <= carriage_return;
---					transmit_valid <= '1';
---				
---				end case;
---			
---			end if;
---		end process p_serial;
---		
---		
---		p_convert_to_int : process(clk)
---		begin
---		
---			if rising_edge(clk) then
---				if current_dc_update = '1' then
---					valid_in <= ready;
---					if valid_out = '1' then
---						dc0 <= to_integer(unsigned(bcd_0));
---						dc1 <= to_integer(unsigned(bcd_1));
---						dc2 <= to_integer(unsigned(bcd_2));
---					end if;
---				else
---					valid_in <= '0';
---				end if;
---			end if;
---		end process p_convert_to_int;
-		
-		
 		p_bcd : process(clk)
 		begin
 			if rising_edge(clk) then
-				case bcd_state is
-					
-					when s_idle =>
-					
-						if ready = '1' and current_dc_update = '1' then
-							bcd_state <= s_wait;
-							valid_in <= '1';
-						end if;
-					
-					when s_wait =>
-					
-						valid_in <= '0';
-					
-						if valid_out = '1' then
-							bcd_state <= s_done;
-						end if;
-					
-					when s_done =>
-					
-						dc0 <= to_integer(unsigned(bcd_0));
-						dc1 <= to_integer(unsigned(bcd_1));
-						dc2 <= to_integer(unsigned(bcd_2));
-						bcd_state <= s_idle;
-					
-					when others =>
-					
-						bcd_state <= s_idle;
-				
-				end case;
+				if valid_out = '1' then 
+					dc0 <= to_integer(unsigned(bcd_0));
+					dc1 <= to_integer(unsigned(bcd_1));
+					dc2 <= to_integer(unsigned(bcd_2));
+				end if;
+				dc_valid <= valid_out;
+--				case bcd_state is
+--					
+--					when s_idle =>
+--					
+--						if ready = '1' and current_dc_update = '1' then
+--							bcd_state <= s_wait;
+--							valid_in <= '1';
+--						end if;
+--					
+--					when s_wait =>
+--					
+--						valid_in <= '0';
+--					
+--						if valid_out = '1' then
+--							bcd_state <= s_done;
+--						end if;
+--					
+--					when s_done =>
+--					
+--						dc0 <= to_integer(unsigned(bcd_0));
+--						dc1 <= to_integer(unsigned(bcd_1));
+--						dc2 <= to_integer(unsigned(bcd_2));
+--						bcd_state <= s_idle;
+--					
+--					when others =>
+--					
+--						bcd_state <= s_idle;
+--				
+--				end case;
 			end if;
 		end process p_bcd;
-		
-		
---		p_bcd : process(clk)
---		begin
---			if rising_edge(clk) then
---			
---				case bcd_state is
---				
---				when s_idle =>
---				
---				bcd <= current_dc;
---				
---					--if current_dc_update = '1' then
---						valid_in <= '1';
---						bcd_state <= s_wait;
---					--end if;
---				
---				when s_wait =>
---					
---					valid_in <= '0';
---					if valid_out = '1' then
---						bcd_state <= s_done;
---					end if;
---				
---				when s_done =>
---				
---					dc0 <= to_integer(unsigned(bcd_0));
---					dc1 <= to_integer(unsigned(bcd_1));
---					dc2 <= to_integer(unsigned(bcd_2));
---					bcd_state <= s_idle;
---					
---				when others =>
---				
---					bcd_state <= s_idle;
---					
---				end case;
---			end if;
---		end process p_bcd;
+	
 		
 		p_transmit_data : process(clk)
 		begin
@@ -408,13 +137,18 @@ architecture rtl of dc_disp_ctrl is
 					case transmit_state is
 						
 					when s_idle =>
-					
 						transmit_valid <= '0';
 						transmit <= '0';
 						
+						if do_transmit	= '1' then 
+						
 						--if transmit_ready = '1' then
 							transmit_state <= s_first;
-						--end if;
+						end if;
+						transmit_byte1 	<= transmit_data_byte1;
+						transmit_byte1 	<= transmit_data_byte1;
+						transmit_byte1 	<= transmit_data_byte1;
+						
 					
 					when s_first =>
 						
@@ -480,28 +214,28 @@ architecture rtl of dc_disp_ctrl is
 		
 		end process p_transmit_data;
 		
+	dc <= to_integer(unsigned(current_dc));
 
 		p_dc : process(reset, clk)
 		begin
 
-			if rising_edge(clk) then
+			if reset = '1' then
+				-- 0% duty cycle
+				transmit_data_byte1 <= space;
+				transmit_data_byte2 <= space;
+				transmit_data_byte3 <= ASCII_dc_0;
+				transmit_data_byte4 <= percent;
+				transmit_data_byte5 <= carriage_return;
+				do_transmit	<= '0';
 			
-				if current_dc_update = '1' then -- if we have an updated dc value
+			elsif rising_edge(clk) then
+				do_transmit	<= '0';
+				if dc_valid = '1' then -- if we have an updated dc value
+					do_transmit	<= '1';
 				
-				dc <= to_integer(unsigned(current_dc));
-				
-					if transmit = '0' then			-- only change values when not busy transmitting
+					--if transmit = '0' then			-- only change values when not busy transmitting
 					
-						if reset = '1' then
-							-- 0% duty cycle
-							transmit_data_byte1 <= space;
-							transmit_data_byte2 <= space;
-							transmit_data_byte3 <= ASCII_dc_0;
-							transmit_data_byte4 <= percent;
-							transmit_data_byte5 <= carriage_return;
-							--send_byte <= '1';
-						
-						else 
+						 
 							-- 0-9
 							if dc > 0 and dc < 10 then
 								transmit_data_byte1 <= space;
@@ -509,7 +243,6 @@ architecture rtl of dc_disp_ctrl is
 								transmit_data_byte3 <= ASCII_dc_0;
 								transmit_data_byte4 <= percent;
 								transmit_data_byte5 <= carriage_return;
-								send_byte <= '1';
 						
 							-- 10-99
 							elsif dc > 9 and dc < 100 then
@@ -519,7 +252,6 @@ architecture rtl of dc_disp_ctrl is
 								transmit_data_byte3 <= ASCII_dc_0;
 								transmit_data_byte4 <= percent;
 								transmit_data_byte5 <= carriage_return;
-								--send_byte <= '1';
 						
 							-- 100
 							elsif dc = 100 then
@@ -528,7 +260,6 @@ architecture rtl of dc_disp_ctrl is
 								transmit_data_byte3 <= ASCII_dc_0;
 								transmit_data_byte4 <= percent;
 								transmit_data_byte5 <= carriage_return;
-								--send_byte <= '1';
 							end if;
 						end if;
 						

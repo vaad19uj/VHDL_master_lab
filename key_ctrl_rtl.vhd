@@ -21,22 +21,28 @@ architecture rtl of key_ctrl is
 
 begin
 	
-	p_double_sync : process(clock, key_in_r, key_n)
+	p_double_sync : process(clock)
 	begin
-		key_in_r <= key_n;
-		key_in_2r <= key_in_r;
+		if rising_edge(clock) then
+			key_in_r 	<= key_n;
+			key_in_2r	<= key_in_r;
+		end if;
 	end process p_double_sync;
 	
 	
 	p_counter	: process(clock)
 	begin
-	if rising_edge(clock) then
-		if(ticks < 500000) then
-			ticks <= ticks +1;
-		else
-			ticks <= 0;
+		if rising_edge(clock) then
+			if key_in_2r /= "1111" then 
+				if(ticks < 500000) then
+					ticks 	<= ticks +1;
+				else
+					ticks 	<= 0;
+				end if;
+			else
+				ticks 	<= 0;
+			end if;
 		end if;
-	end if;
 	end process p_counter;
 	
 	
@@ -44,59 +50,25 @@ begin
 
 	begin
 		if rising_edge(clock) then
-		--ticks <= 0;
-			if key_in_2r(0) = '0' then
-				key_off <= '1';
-				key_down <= 'X';
-				key_up <= 'X';
-				key_on <= 'X';
-				
-				if(ticks = 500000) then
+			-- Default assignments
+			key_off 	<= '0';
+			key_down <= '0';
+			key_up 	<= '0';
+			key_on 	<= '0';
+			if ticks = 0 then 
+				if key_in_2r(0) = '0' then
+					-- Key (0) is OFF
 					key_off <= '1';
-				else 
-					key_off <= '0';
-				end if;
-			
-			elsif key_in_2r(2) = '0' and key_in_2r(3) = '0' then
-				key_down <= 'X';
-				key_up <= 'X';
-				
-				
-			elsif key_in_2r(1) = '0' then
-				key_on <= '1';
-					if(ticks = 500000) then
-						key_on <= '1';
-					else 
-						key_on <= '0';
-					end if;
-					
-			elsif key_in_2r(2) = '0' then
-				key_down <= '1';
-				
-				if(ticks = 500000) then
+				elsif key_in_2r(1) = '0' then
+					-- Key (1) is ON
+					key_on <= '1';
+				elsif key_in_2r(2) = '0' and key_in_2r(3) = '1' then
 					key_down <= '1';
-				else 
-					key_down <= '0';
-				end if;
-					
-					
-			elsif key_in_2r(3) = '0' then
-				key_up <= '1';
-				
-				if(ticks = 500000) then
+				elsif key_in_2r(3) = '0' and key_in_2r(2) = '1' then
 					key_up <= '1';
-					--ticks <= 0;
-				else 
-					key_up <= '0';
 				end if;
-				
-			else 
-				key_off <= not key_in_2r(0);
-				key_on <= not key_in_2r(1);
-				key_down <= not key_in_2r(2);
-				key_up <= not key_in_2r(3);
-			
 			end if;
+			
 		end if;
 	end process p_key_ctrl;
 end architecture rtl;
