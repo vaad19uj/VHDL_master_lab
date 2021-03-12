@@ -22,7 +22,6 @@ architecture rtl of dc_disp_ctrl is
 	-- types
 	type t_bcd_state is (s_idle, s_wait, s_done);
 	type t_transmit_byte_state is (s_idle, s_first, s_second, s_third, s_fourth, s_fifth);
-	--type t_transmit_byte_state is (s_idle, s_hundreds, s_tens, s_ones, s_percent, s_carriage_return);
 	
 	-- components
 	component bcd_decode is
@@ -49,7 +48,6 @@ architecture rtl of dc_disp_ctrl is
 	signal bcd_0								: std_logic_vector(3 downto 0);
 	signal bcd_1								: std_logic_vector(3 downto 0);
 	signal bcd_2								: std_logic_vector(3 downto 0);
---	signal bcd									: std_logic_vector(7 downto 0);
 	signal dc0									: integer range 0 to 9;
 	signal dc1									: integer range 0 to 9;
 	signal dc2									: integer range 0 to 1;
@@ -60,10 +58,14 @@ architecture rtl of dc_disp_ctrl is
 	signal transmit_data_byte3				: std_logic_vector(7 downto 0);
 	signal transmit_data_byte4				: std_logic_vector(7 downto 0);
 	signal transmit_data_byte5				: std_logic_vector(7 downto 0);
+	signal transmit_byte1					: std_logic_vector(7 downto 0);	-- used for saving value while transmitting
+	signal transmit_byte2					: std_logic_vector(7 downto 0);	-- used for saving value while transmitting
+	signal transmit_byte3					: std_logic_vector(7 downto 0);	-- used for saving value while transmitting
 	signal transmit_state					: t_transmit_byte_state := s_idle;
 	signal dc									: integer range 0 to 100 := 0;
-	signal transmit							: std_logic := '0'; -- flag to check transmit
-	signal send_byte							: std_logic := '0';
+	signal do_transmit						: std_logic := '0';
+	--signal transmit							: std_logic := '0'; -- flag to check transmit
+	--signal send_byte							: std_logic := '0';
 	
 	-- constants
 	constant percent		 			: std_logic_vector(7 downto 0) := X"25";	
@@ -95,35 +97,6 @@ architecture rtl of dc_disp_ctrl is
 					dc2 <= to_integer(unsigned(bcd_2));
 				end if;
 				dc_valid <= valid_out;
---				case bcd_state is
---					
---					when s_idle =>
---					
---						if ready = '1' and current_dc_update = '1' then
---							bcd_state <= s_wait;
---							valid_in <= '1';
---						end if;
---					
---					when s_wait =>
---					
---						valid_in <= '0';
---					
---						if valid_out = '1' then
---							bcd_state <= s_done;
---						end if;
---					
---					when s_done =>
---					
---						dc0 <= to_integer(unsigned(bcd_0));
---						dc1 <= to_integer(unsigned(bcd_1));
---						dc2 <= to_integer(unsigned(bcd_2));
---						bcd_state <= s_idle;
---					
---					when others =>
---					
---						bcd_state <= s_idle;
---				
---				end case;
 			end if;
 		end process p_bcd;
 	
@@ -138,83 +111,54 @@ architecture rtl of dc_disp_ctrl is
 						
 					when s_idle =>
 						transmit_valid <= '0';
-						transmit <= '0';
 						
 						if do_transmit	= '1' then 
-						
-						--if transmit_ready = '1' then
 							transmit_state <= s_first;
 						end if;
-						transmit_byte1 	<= transmit_data_byte1;
-						transmit_byte1 	<= transmit_data_byte1;
-						transmit_byte1 	<= transmit_data_byte1;
 						
+						-- save current values if they change during transmission
+						transmit_byte1 	<= transmit_data_byte1;
+						transmit_byte2 	<= transmit_data_byte2;
+						transmit_byte3 	<= transmit_data_byte3;
 					
 					when s_first =>
 						
-						transmit <= '1';
-						transmit_data <= transmit_data_byte1;
+						transmit_data <= transmit_byte1;
 						transmit_valid <= '1';
 					
-						--if transmit_ready = '1' then
-							--transmit_valid <= '0';
-							transmit_state <= s_second;
-						--end if;
+						transmit_state <= s_second;
 					
 					when s_second =>
 					
-						transmit_data <= transmit_data_byte2;
-						--transmit_valid <= '1';
-					
-						--if transmit_ready = '1' then
-							--transmit_valid <= '0';
-							transmit_state <= s_third;
-						--end if;
+						transmit_data <= transmit_byte2;
+						transmit_state <= s_third;
 					
 					when s_third =>
 					
-						transmit_data <= transmit_data_byte3;
-						--transmit_valid <= '1';
-					
-						--if transmit_ready = '1' then
-							--transmit_valid <= '0';
-							transmit_state <= s_fourth;
-						--end if;
+						transmit_data <= transmit_byte3;
+						transmit_state <= s_fourth;
 					
 					when s_fourth =>
 					
-						transmit_data <= transmit_data_byte4;
-						--transmit_valid <= '1';
-					
-						--if transmit_ready = '1' then
-							--transmit_valid <= '0';
-							transmit_state <= s_fifth;
-						--end if;
+						transmit_data <= percent;
+						transmit_state <= s_fifth;
 						
 					when s_fifth =>
 					
-						transmit_data <= transmit_data_byte5;
-						--transmit_valid <= '1';
-					
-						--if transmit_ready = '1' then
-							--transmit_valid <= '0';
-							transmit_state <= s_idle;
-						--end if;
+						transmit_data <= carriage_return;
+						transmit_state <= s_idle;
 					
 					when others =>
-						transmit <= '0';
 						transmit_state <= s_idle;
 						transmit_valid <= '0';
 					
 					end case;
-			
 				end if;
-			
 			end if;
-		
 		end process p_transmit_data;
 		
-	dc <= to_integer(unsigned(current_dc));
+		-- typecast from current_dc vector to integer
+		dc <= to_integer(unsigned(current_dc));
 
 		p_dc : process(reset, clk)
 		begin
@@ -224,57 +168,38 @@ architecture rtl of dc_disp_ctrl is
 				transmit_data_byte1 <= space;
 				transmit_data_byte2 <= space;
 				transmit_data_byte3 <= ASCII_dc_0;
-				transmit_data_byte4 <= percent;
-				transmit_data_byte5 <= carriage_return;
-				do_transmit	<= '0';
+				do_transmit	<= '1';
 			
 			elsif rising_edge(clk) then
 				do_transmit	<= '0';
+				
 				if dc_valid = '1' then -- if we have an updated dc value
 					do_transmit	<= '1';
-				
-					--if transmit = '0' then			-- only change values when not busy transmitting
+						
+						-- 0-9
+						if dc > 0 and dc < 10 then
+							transmit_data_byte1 <= space;
+							transmit_data_byte2 <= space;
+							transmit_data_byte3 <= ASCII_dc_0;
 					
-						 
-							-- 0-9
-							if dc > 0 and dc < 10 then
-								transmit_data_byte1 <= space;
-								transmit_data_byte2 <= space;
-								transmit_data_byte3 <= ASCII_dc_0;
-								transmit_data_byte4 <= percent;
-								transmit_data_byte5 <= carriage_return;
-						
-							-- 10-99
-							elsif dc > 9 and dc < 100 then
-								
-								transmit_data_byte1 <= space;
-								transmit_data_byte2 <= ASCII_dc_1;
-								transmit_data_byte3 <= ASCII_dc_0;
-								transmit_data_byte4 <= percent;
-								transmit_data_byte5 <= carriage_return;
-						
-							-- 100
-							elsif dc = 100 then
-								transmit_data_byte1 <= ASCII_dc_2;
-								transmit_data_byte2 <= ASCII_dc_1;
-								transmit_data_byte3 <= ASCII_dc_0;
-								transmit_data_byte4 <= percent;
-								transmit_data_byte5 <= carriage_return;
-							end if;
+						-- 10-99
+						elsif dc > 9 and dc < 100 then
+							
+							transmit_data_byte1 <= space;
+							transmit_data_byte2 <= ASCII_dc_1;
+							transmit_data_byte3 <= ASCII_dc_0;
+					
+						-- 100
+						elsif dc = 100 then
+							transmit_data_byte1 <= ASCII_dc_2;
+							transmit_data_byte2 <= ASCII_dc_1;
+							transmit_data_byte3 <= ASCII_dc_0;
+
 						end if;
-						
-						--else
-						
---							In the case of a new duty cycle update have been reported before the current duty cycle 
---							information have been fully transmitted on the serial interface the serial send shall be 
---							directly started again when finished in order to update the serial 
---							interface with the latest information. 
-						
 					end if;
 				end if;
-			end if;
-		end process p_dc;
-		
+			end process p_dc;
+
 		p_current_dc0 : process(clk, reset)
 		begin 
 			if rising_edge(clk) then
@@ -295,7 +220,6 @@ architecture rtl of dc_disp_ctrl is
 							hex0 <= (1 => '0', 2 => '0', others => '1');
 						when 2 =>
 						-- two
-						-- two 
 							ASCII_dc_0 <= X"32";
 							hex0 <= (0 => '0', 1 => '0', 6 => '0', 4 => '0', 3 => '0', others => '1');
 						when 3 =>
