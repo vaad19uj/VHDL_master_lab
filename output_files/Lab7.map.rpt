@@ -1,5 +1,5 @@
 Analysis & Synthesis report for Lab7
-Fri Mar 12 12:33:21 2021
+Sun Mar 14 14:11:31 2021
 Quartus II 64-Bit Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
 
 
@@ -59,15 +59,15 @@ applicable agreement for further details.
 +--------------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Fri Mar 12 12:33:20 2021           ;
+; Analysis & Synthesis Status        ; Successful - Sun Mar 14 14:11:31 2021           ;
 ; Quartus II 64-Bit Version          ; 13.0.1 Build 232 06/12/2013 SP 1 SJ Web Edition ;
 ; Revision Name                      ; Lab7                                            ;
 ; Top-level Entity Name              ; top_level                                       ;
 ; Family                             ; Cyclone II                                      ;
-; Total logic elements               ; 515                                             ;
-;     Total combinational functions  ; 465                                             ;
-;     Dedicated logic registers      ; 294                                             ;
-; Total registers                    ; 294                                             ;
+; Total logic elements               ; 517                                             ;
+;     Total combinational functions  ; 464                                             ;
+;     Dedicated logic registers      ; 301                                             ;
+; Total registers                    ; 301                                             ;
 ; Total pins                         ; 56                                              ;
 ; Total virtual pins                 ; 0                                               ;
 ; Total memory bits                  ; 0                                               ;
@@ -199,20 +199,20 @@ Parallel compilation was disabled, but you have multiple processors available. E
 +---------------------------------------------+------------------------------------------------------------------+
 ; Resource                                    ; Usage                                                            ;
 +---------------------------------------------+------------------------------------------------------------------+
-; Estimated Total logic elements              ; 515                                                              ;
+; Estimated Total logic elements              ; 517                                                              ;
 ;                                             ;                                                                  ;
-; Total combinational functions               ; 465                                                              ;
+; Total combinational functions               ; 464                                                              ;
 ; Logic element usage by number of LUT inputs ;                                                                  ;
-;     -- 4 input functions                    ; 212                                                              ;
-;     -- 3 input functions                    ; 92                                                               ;
-;     -- <=2 input functions                  ; 161                                                              ;
+;     -- 4 input functions                    ; 209                                                              ;
+;     -- 3 input functions                    ; 91                                                               ;
+;     -- <=2 input functions                  ; 164                                                              ;
 ;                                             ;                                                                  ;
 ; Logic elements by mode                      ;                                                                  ;
-;     -- normal mode                          ; 360                                                              ;
+;     -- normal mode                          ; 359                                                              ;
 ;     -- arithmetic mode                      ; 105                                                              ;
 ;                                             ;                                                                  ;
-; Total registers                             ; 294                                                              ;
-;     -- Dedicated logic registers            ; 294                                                              ;
+; Total registers                             ; 301                                                              ;
+;     -- Dedicated logic registers            ; 301                                                              ;
 ;     -- I/O registers                        ; 0                                                                ;
 ;                                             ;                                                                  ;
 ; I/O pins                                    ; 56                                                               ;
@@ -221,9 +221,9 @@ Parallel compilation was disabled, but you have multiple processors available. E
 ;     -- PLLs                                 ; 1                                                                ;
 ;                                             ;                                                                  ;
 ; Maximum fan-out node                        ; altera_pll:\b_gen_pll:i_altera_pll|altpll:altpll_component|_clk0 ;
-; Maximum fan-out                             ; 294                                                              ;
-; Total fan-out                               ; 2290                                                             ;
-; Average fan-out                             ; 2.81                                                             ;
+; Maximum fan-out                             ; 301                                                              ;
+; Total fan-out                               ; 2293                                                             ;
+; Average fan-out                             ; 2.79                                                             ;
 +---------------------------------------------+------------------------------------------------------------------+
 
 
@@ -232,11 +232,11 @@ Parallel compilation was disabled, but you have multiple processors available. E
 +-----------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+-----------------------------------------------------------------------+--------------+
 ; Compilation Hierarchy Node              ; LC Combinationals ; LC Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                                   ; Library Name ;
 +-----------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+-----------------------------------------------------------------------+--------------+
-; |top_level                              ; 465 (0)           ; 294 (0)      ; 0           ; 0            ; 0       ; 0         ; 56   ; 0            ; |top_level                                                            ; work         ;
+; |top_level                              ; 464 (0)           ; 301 (0)      ; 0           ; 0            ; 0       ; 0         ; 56   ; 0            ; |top_level                                                            ; work         ;
 ;    |altera_pll:\b_gen_pll:i_altera_pll| ; 0 (0)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_level|altera_pll:\b_gen_pll:i_altera_pll                         ; work         ;
 ;       |altpll:altpll_component|         ; 0 (0)             ; 0 (0)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_level|altera_pll:\b_gen_pll:i_altera_pll|altpll:altpll_component ; work         ;
-;    |dc_disp_ctrl:i_dc_disp_ctrl|        ; 147 (68)          ; 97 (68)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl                                ; work         ;
-;       |bcd_decode:i_bcd_decode|         ; 79 (79)           ; 29 (29)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|bcd_decode:i_bcd_decode        ; work         ;
+;    |dc_disp_ctrl:i_dc_disp_ctrl|        ; 146 (71)          ; 104 (75)     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl                                ; work         ;
+;       |bcd_decode:i_bcd_decode|         ; 75 (75)           ; 29 (29)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|bcd_decode:i_bcd_decode        ; work         ;
 ;    |key_ctrl:i_key_ctrl|                ; 36 (36)           ; 31 (31)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_level|key_ctrl:i_key_ctrl                                        ; work         ;
 ;    |pwm_ctrl:i_pwm_ctrl|                ; 180 (180)         ; 89 (89)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_level|pwm_ctrl:i_pwm_ctrl                                        ; work         ;
 ;    |reset_ctrl:\b_gen_pll:i_reset_ctrl| ; 10 (10)           ; 8 (8)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |top_level|reset_ctrl:\b_gen_pll:i_reset_ctrl                         ; work         ;
@@ -318,6 +318,10 @@ Encoding Type:  One-Hot
 ; dc_disp_ctrl:i_dc_disp_ctrl|ASCII_dc_0[4,5]                        ; Stuck at VCC due to stuck port data_in                         ;
 ; dc_disp_ctrl:i_dc_disp_ctrl|ASCII_dc_1[6,7]                        ; Stuck at GND due to stuck port data_in                         ;
 ; dc_disp_ctrl:i_dc_disp_ctrl|ASCII_dc_1[4,5]                        ; Stuck at VCC due to stuck port data_in                         ;
+; dc_disp_ctrl:i_dc_disp_ctrl|ASCII_dc_2[6,7]                        ; Stuck at GND due to stuck port data_in                         ;
+; dc_disp_ctrl:i_dc_disp_ctrl|ASCII_dc_2[4,5]                        ; Stuck at VCC due to stuck port data_in                         ;
+; dc_disp_ctrl:i_dc_disp_ctrl|ASCII_dc_2[1..3]                       ; Stuck at GND due to stuck port data_in                         ;
+; dc_disp_ctrl:i_dc_disp_ctrl|hex2[6]                                ; Stuck at VCC due to stuck port data_in                         ;
 ; pwm_ctrl:i_pwm_ctrl|current_dc[7]                                  ; Stuck at GND due to stuck port data_in                         ;
 ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte1[6]                 ; Merged with dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte1[7] ;
 ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte3[6,7]               ; Merged with dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte1[7] ;
@@ -344,25 +348,26 @@ Encoding Type:  One-Hot
 ; serial_uart:i_serial_uart|tx_byte_saved[6]                         ; Stuck at GND due to stuck port data_in                         ;
 ; serial_uart:i_serial_uart|tx_state.s_parity                        ; Stuck at GND due to stuck port data_in                         ;
 ; serial_uart:i_serial_uart|tx_parity_bit                            ; Lost fanout                                                    ;
-; Total Number of Removed Registers = 43                             ;                                                                ;
+; Total Number of Removed Registers = 51                             ;                                                                ;
 +--------------------------------------------------------------------+----------------------------------------------------------------+
 
 
-+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-; Removed Registers Triggering Further Register Optimizations                                                                                         ;
-+----------------------------------------------------+---------------------------+--------------------------------------------------------------------+
-; Register name                                      ; Reason for Removal        ; Registers Removed due to This Register                             ;
-+----------------------------------------------------+---------------------------+--------------------------------------------------------------------+
-; dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte1[7] ; Stuck at GND              ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_byte1[1],                     ;
-;                                                    ; due to stuck port data_in ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_data[6],                      ;
-;                                                    ;                           ; serial_uart:i_serial_uart|tx_byte_saved[6]                         ;
-; dc_disp_ctrl:i_dc_disp_ctrl|ASCII_dc_0[5]          ; Stuck at VCC              ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte3[5],                ;
-;                                                    ; due to stuck port data_in ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_byte3[4]                      ;
-; pwm_ctrl:i_pwm_ctrl|current_dc[7]                  ; Stuck at GND              ; dc_disp_ctrl:i_dc_disp_ctrl|bcd_decode:i_bcd_decode|\p_bcd:temp[7] ;
-;                                                    ; due to stuck port data_in ;                                                                    ;
-; dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte1[5] ; Stuck at VCC              ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_byte1[5]                      ;
-;                                                    ; due to stuck port data_in ;                                                                    ;
-+----------------------------------------------------+---------------------------+--------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------------------------------+
+; Removed Registers Triggering Further Register Optimizations                                                                                ;
++-------------------------------------------+---------------------------+--------------------------------------------------------------------+
+; Register name                             ; Reason for Removal        ; Registers Removed due to This Register                             ;
++-------------------------------------------+---------------------------+--------------------------------------------------------------------+
+; dc_disp_ctrl:i_dc_disp_ctrl|ASCII_dc_2[7] ; Stuck at GND              ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte1[7],                ;
+;                                           ; due to stuck port data_in ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_byte1[1],                     ;
+;                                           ;                           ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_data[6],                      ;
+;                                           ;                           ; serial_uart:i_serial_uart|tx_byte_saved[6]                         ;
+; dc_disp_ctrl:i_dc_disp_ctrl|ASCII_dc_0[5] ; Stuck at VCC              ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte3[5],                ;
+;                                           ; due to stuck port data_in ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_byte3[4]                      ;
+; dc_disp_ctrl:i_dc_disp_ctrl|ASCII_dc_2[5] ; Stuck at VCC              ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte1[5],                ;
+;                                           ; due to stuck port data_in ; dc_disp_ctrl:i_dc_disp_ctrl|transmit_byte1[5]                      ;
+; pwm_ctrl:i_pwm_ctrl|current_dc[7]         ; Stuck at GND              ; dc_disp_ctrl:i_dc_disp_ctrl|bcd_decode:i_bcd_decode|\p_bcd:temp[7] ;
+;                                           ; due to stuck port data_in ;                                                                    ;
++-------------------------------------------+---------------------------+--------------------------------------------------------------------+
 
 
 +------------------------------------------------------+
@@ -370,7 +375,7 @@ Encoding Type:  One-Hot
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 294   ;
+; Total registers                              ; 301   ;
 ; Number of registers using Synchronous Clear  ; 66    ;
 ; Number of registers using Synchronous Load   ; 9     ;
 ; Number of registers using Asynchronous Clear ; 30    ;
@@ -385,7 +390,7 @@ Encoding Type:  One-Hot
 +----------------------------------------------------+---------+
 ; Inverted Register                                  ; Fan out ;
 +----------------------------------------------------+---------+
-; reset_ctrl:\b_gen_pll:i_reset_ctrl|reset_out       ; 103     ;
+; reset_ctrl:\b_gen_pll:i_reset_ctrl|reset_out       ; 104     ;
 ; pwm_ctrl:i_pwm_ctrl|pwm_counter_last[15]           ; 1       ;
 ; pwm_ctrl:i_pwm_ctrl|pwm_counter_last[14]           ; 1       ;
 ; pwm_ctrl:i_pwm_ctrl|pwm_counter_last[9]            ; 1       ;
@@ -410,19 +415,19 @@ Encoding Type:  One-Hot
 ; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                                    ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+---------------------------------------------------------------+
 ; 3:1                ; 11 bits   ; 22 LEs        ; 11 LEs               ; 11 LEs                 ; Yes        ; |top_level|pwm_ctrl:i_pwm_ctrl|pwm_last_duty_cycle_percent[4] ;
-; 3:1                ; 9 bits    ; 18 LEs        ; 9 LEs                ; 9 LEs                  ; Yes        ; |top_level|serial_uart:i_serial_uart|tx_bit_cnt[4]            ;
+; 3:1                ; 9 bits    ; 18 LEs        ; 9 LEs                ; 9 LEs                  ; Yes        ; |top_level|serial_uart:i_serial_uart|tx_bit_cnt[0]            ;
 ; 3:1                ; 9 bits    ; 18 LEs        ; 9 LEs                ; 9 LEs                  ; Yes        ; |top_level|serial_uart:i_serial_uart|rx_bit_cnt[8]            ;
-; 3:1                ; 19 bits   ; 38 LEs        ; 19 LEs               ; 19 LEs                 ; Yes        ; |top_level|key_ctrl:i_key_ctrl|ticks[14]                      ;
-; 4:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte2[4] ;
-; 4:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte2[0] ;
-; 5:1                ; 8 bits    ; 24 LEs        ; 8 LEs                ; 16 LEs                 ; Yes        ; |top_level|serial_uart:i_serial_uart|received_data[6]         ;
-; 5:1                ; 6 bits    ; 18 LEs        ; 6 LEs                ; 12 LEs                 ; Yes        ; |top_level|serial_uart:i_serial_uart|tx_byte_saved[3]         ;
-; 5:1                ; 2 bits    ; 6 LEs         ; 4 LEs                ; 2 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data[1]       ;
-; 5:1                ; 2 bits    ; 6 LEs         ; 4 LEs                ; 2 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data[4]       ;
-; 12:1               ; 23 bits   ; 184 LEs       ; 92 LEs               ; 92 LEs                 ; Yes        ; |top_level|pwm_ctrl:i_pwm_ctrl|pwm_counter[13]                ;
-; 3:1                ; 12 bits   ; 24 LEs        ; 12 LEs               ; 12 LEs                 ; Yes        ; |top_level|pwm_ctrl:i_pwm_ctrl|pwm_last_duty_cycle_percent[2] ;
-; 4:1                ; 2 bits    ; 4 LEs         ; 0 LEs                ; 4 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte1[5] ;
-; 4:1                ; 4 bits    ; 8 LEs         ; 0 LEs                ; 8 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte3[2] ;
+; 3:1                ; 19 bits   ; 38 LEs        ; 19 LEs               ; 19 LEs                 ; Yes        ; |top_level|key_ctrl:i_key_ctrl|ticks[13]                      ;
+; 4:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte1[4] ;
+; 4:1                ; 4 bits    ; 8 LEs         ; 4 LEs                ; 4 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte2[2] ;
+; 5:1                ; 8 bits    ; 24 LEs        ; 8 LEs                ; 16 LEs                 ; Yes        ; |top_level|serial_uart:i_serial_uart|received_data[1]         ;
+; 5:1                ; 6 bits    ; 18 LEs        ; 6 LEs                ; 12 LEs                 ; Yes        ; |top_level|serial_uart:i_serial_uart|tx_byte_saved[2]         ;
+; 5:1                ; 2 bits    ; 6 LEs         ; 4 LEs                ; 2 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data[2]       ;
+; 5:1                ; 2 bits    ; 6 LEs         ; 4 LEs                ; 2 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data[0]       ;
+; 12:1               ; 23 bits   ; 184 LEs       ; 92 LEs               ; 92 LEs                 ; Yes        ; |top_level|pwm_ctrl:i_pwm_ctrl|pwm_counter[12]                ;
+; 3:1                ; 12 bits   ; 24 LEs        ; 12 LEs               ; 12 LEs                 ; Yes        ; |top_level|pwm_ctrl:i_pwm_ctrl|pwm_counter_last[0]            ;
+; 4:1                ; 2 bits    ; 4 LEs         ; 0 LEs                ; 4 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte3[5] ;
+; 4:1                ; 4 bits    ; 8 LEs         ; 0 LEs                ; 8 LEs                  ; Yes        ; |top_level|dc_disp_ctrl:i_dc_disp_ctrl|transmit_data_byte3[1] ;
 ; 3:1                ; 3 bits    ; 6 LEs         ; 3 LEs                ; 3 LEs                  ; No         ; |top_level|serial_uart:i_serial_uart|tx_bit_no                ;
 ; 3:1                ; 3 bits    ; 6 LEs         ; 3 LEs                ; 3 LEs                  ; No         ; |top_level|serial_uart:i_serial_uart|rx_bit_no                ;
 ; 3:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; No         ; |top_level|pwm_ctrl:i_pwm_ctrl|Add3                           ;
@@ -908,7 +913,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
     Info: Version 13.0.1 Build 232 06/12/2013 Service Pack 1 SJ Web Edition
-    Info: Processing started: Fri Mar 12 12:33:13 2021
+    Info: Processing started: Sun Mar 14 14:11:25 2021
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off Lab7 -c Lab7
 Warning (20028): Parallel compilation is not licensed and has been disabled
 Info (12021): Found 2 design units, including 1 entities, in source file key_ctrl_rtl.vhd
@@ -1021,10 +1026,7 @@ Info (12128): Elaborating entity "pwm_ctrl" for hierarchy "pwm_ctrl:i_pwm_ctrl"
 Info (12128): Elaborating entity "serial_ctrl" for hierarchy "serial_ctrl:i_serial_ctrl"
 Info (12128): Elaborating entity "dc_disp_ctrl" for hierarchy "dc_disp_ctrl:i_dc_disp_ctrl"
 Warning (10036): Verilog HDL or VHDL warning at dc_disp_ctrl_rtl.vhd(45): object "ready" assigned a value but never read
-Warning (10492): VHDL Process Statement warning at dc_disp_ctrl_rtl.vhd(171): signal "ASCII_dc_0" is read inside the Process Statement but isn't in the Process Statement's sensitivity list
-Warning (10492): VHDL Process Statement warning at dc_disp_ctrl_rtl.vhd(326): signal "dc2" is read inside the Process Statement but isn't in the Process Statement's sensitivity list
-Warning (10492): VHDL Process Statement warning at dc_disp_ctrl_rtl.vhd(329): signal "dc2" is read inside the Process Statement but isn't in the Process Statement's sensitivity list
-Warning (10631): VHDL Process Statement warning at dc_disp_ctrl_rtl.vhd(320): inferring latch(es) for signal or variable "ASCII_dc_2", which holds its previous value in one or more paths through the process
+Warning (10492): VHDL Process Statement warning at dc_disp_ctrl_rtl.vhd(170): signal "ASCII_dc_0" is read inside the Process Statement but isn't in the Process Statement's sensitivity list
 Info (12128): Elaborating entity "bcd_decode" for hierarchy "dc_disp_ctrl:i_dc_disp_ctrl|bcd_decode:i_bcd_decode"
 Info (13000): Registers with preset signals will power-up high
 Info (13003): DEV_CLRn pin will set, and not reset, register with preset signal due to NOT Gate Push-Back
@@ -1067,15 +1069,15 @@ Warning (21074): Design contains 10 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "sw[7]"
     Warning (15610): No output dependent on input pin "sw[8]"
     Warning (15610): No output dependent on input pin "sw[9]"
-Info (21057): Implemented 576 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 579 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 16 input pins
     Info (21059): Implemented 40 output pins
-    Info (21061): Implemented 519 logic cells
+    Info (21061): Implemented 522 logic cells
     Info (21065): Implemented 1 PLLs
-Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 43 warnings
-    Info: Peak virtual memory: 4649 megabytes
-    Info: Processing ended: Fri Mar 12 12:33:21 2021
-    Info: Elapsed time: 00:00:08
+Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 40 warnings
+    Info: Peak virtual memory: 4646 megabytes
+    Info: Processing ended: Sun Mar 14 14:11:31 2021
+    Info: Elapsed time: 00:00:06
     Info: Total CPU time (on all processors): 00:00:06
 
 
