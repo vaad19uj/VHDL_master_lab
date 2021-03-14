@@ -172,12 +172,12 @@ architecture rtl of dc_disp_ctrl is
 			
 			elsif rising_edge(clk) then
 				do_transmit	<= '0';
-				
-				if dc_valid = '1' then -- if we have an updated dc value
+			
+				if dc_valid = '1' then -- if bcd values are valid
 					do_transmit	<= '1';
 						
 						-- 0-9
-						if dc > 0 and dc < 10 then
+						if (dc > 0 and dc < 10) then
 							transmit_data_byte1 <= space;
 							transmit_data_byte2 <= space;
 							transmit_data_byte3 <= ASCII_dc_0;
@@ -320,22 +320,24 @@ architecture rtl of dc_disp_ctrl is
 			
 		p_current_dc2 : process(clk, reset)
 		begin
-			if reset = '1' then
-				-- zero
-				ASCII_dc_2 <= X"30";
-				hex2 <= (others => '1');
-			elsif dc2 = 1 then
-				ASCII_dc_2 <= X"31";
-				hex2 <= (1 => '0', 2 => '0', others => '1');
-			elsif dc2 = 0 then
-				-- zero
-				ASCII_dc_2 <= X"30";
-				hex2 <= (6 => '1', others => '0');
-			else
-				-- turned off
-				hex2 <= (others => '1');
+		
+			if rising_edge(clk) then 
+				if reset = '1' then
+					-- zero
+					ASCII_dc_2 <= X"30";
+					hex2 <= (others => '1');
+				elsif dc2 = 1 then
+					ASCII_dc_2 <= X"31";
+					hex2 <= (1 => '0', 2 => '0', others => '1');
+				elsif dc2 = 0 then
+					-- zero
+					ASCII_dc_2 <= X"30";
+					hex2 <= (6 => '1', others => '0');
+				else
+					-- turned off
+					hex2 <= (others => '1');
+				end if;
 			end if;
-			
 		end process p_current_dc2;
 	
 end architecture rtl;

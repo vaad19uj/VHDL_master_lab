@@ -89,7 +89,6 @@ architecture rtl of top_level is
       end process p_internal_reset;
    end generate;
 	
-
 	
 	i_serial_uart : entity work.serial_uart
 		generic map(

@@ -32,8 +32,6 @@ architecture rtl of serial_ctrl is
 			if received_valid = '1' then
 				case received_data is
 				
-				-- ASCII U 
-				-- 85
 				when c_ascii_u_lc =>
 					
 					-- When the ASCII Character ‘U’ or ‘u’ is received a one clock cycle 
@@ -42,10 +40,7 @@ architecture rtl of serial_ctrl is
 					serial_down <= '0';
 					serial_off <= '0';
 					serial_on <= '0';
-					
-					
-				-- ASCII u
-				-- 117
+
 				when c_ascii_u_uc =>
 				
 				-- When the ASCII Character ‘U’ or ‘u’ is received a one clock cycle 
@@ -55,8 +50,6 @@ architecture rtl of serial_ctrl is
 					serial_off <= '0';
 					serial_on <= '0';
 				
-				-- ASCII D
-				-- 68
 				when c_ascii_d_lc => 
 				
 				-- The serial_down signal shall be controlled in the same way 
@@ -66,8 +59,6 @@ architecture rtl of serial_ctrl is
 					serial_off <= '0';
 					serial_on <= '0';
 				
-				-- ASCII d
-				-- 100
 				when c_ascii_d_uc =>
 				
 				-- The serial_down signal shall be controlled in the same way 
@@ -77,7 +68,6 @@ architecture rtl of serial_ctrl is
 					serial_off <= '0';
 					serial_on <= '0';	
 				
-				-- ASCII 0
 				when c_ascii_0 =>
 				
 				-- The serial_off signal shall be pulsed high when the number ‘0’ is received. 
@@ -85,8 +75,7 @@ architecture rtl of serial_ctrl is
 					serial_down <= '0';
 					serial_off <= '1';
 					serial_on <= '0';
-				
-				-- ASCII 1
+
 				when c_ascii_1 =>
 				
 				-- And the serial_on signal shall be pulsed when the ASCII Character for number ‘1’ is received. 

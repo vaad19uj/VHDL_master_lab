@@ -99,6 +99,7 @@ architecture rtl of pwm_ctrl is
 		begin
 			if rising_edge(clk) then
 			
+				-- Default assignment
 				update_last_on_percent <= '0';
 			
 				if key_off = '1' then
