@@ -64,8 +64,6 @@ architecture rtl of dc_disp_ctrl is
 	signal transmit_state					: t_transmit_byte_state := s_idle;
 	signal dc									: integer range 0 to 100 := 0;
 	signal do_transmit						: std_logic := '0';
-	--signal transmit							: std_logic := '0'; -- flag to check transmit
-	--signal send_byte							: std_logic := '0';
 	
 	-- constants
 	constant percent		 			: std_logic_vector(7 downto 0) := X"25";	

@@ -40,7 +40,7 @@ begin
 					ticks 	<= 0;
 				end if;
 			else
-				ticks 	<= 0;
+				ticks 		<= 0;
 			end if;
 		end if;
 	end process p_counter;
@@ -68,7 +68,6 @@ begin
 					key_up <= '1';
 				end if;
 			end if;
-			
 		end if;
 	end process p_key_ctrl;
 end architecture rtl;
