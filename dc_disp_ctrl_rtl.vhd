@@ -177,7 +177,7 @@ architecture rtl of dc_disp_ctrl is
 					do_transmit	<= '1';
 						
 						-- 0-9
-						if (dc > 0 and dc < 10) then
+						if (dc >= 0 and dc < 10) then
 							transmit_data_byte1 <= space;
 							transmit_data_byte2 <= space;
 							transmit_data_byte3 <= ASCII_dc_0;
