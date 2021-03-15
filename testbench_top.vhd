@@ -380,7 +380,7 @@ begin -- architecture
          wait until serial_transmit_ready = '1';   -- byte sent
          
          -- Wait for 3 ms to ensure PWM Check process to get updated duty cycle.
-         wait for 3 ms;
+         wait for 4 ms;
          v_dc_check_ok := fn_write_dc_status (  hex_dc_detected,
                                                 detected_dc,
                                                 serial_detected_dc,

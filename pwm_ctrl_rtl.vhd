@@ -24,32 +24,30 @@ end entity pwm_ctrl;
 architecture rtl of pwm_ctrl is
 
 	-- constants
-	constant c_cnt_max									: natural := 50000-1; -- 50MHz/1000Hz
+	constant c_cnt_max									: natural := 50000; -- 50MHz/1000Hz
 	constant periodtime									: natural := 50000;	-- 1ms
+	constant c_percent_step								: natural := 500;
 
 	--signals
 	signal pwm_duty_cycle_percent 					: natural range 0 to 100 := 0;
 	signal pwm_last_duty_cycle_percent				: natural range 0 to 100 := 100;
 	signal update_last_on_percent						: std_logic;
 	signal pwm_counter									: integer range 0 to c_cnt_max := 0; -- used for LED
-	signal pwm_counter_last								: integer range 0 to c_cnt_max := 49999; -- used for LED
 	signal period_counter								: integer range 0 to c_cnt_max := 0;
 	signal tick_1ms										: std_logic := '1';
-	signal last_sent_pwm									: integer range 0 to 100 := 0;
-	signal pulse											: std_logic;
 	signal counter 										: natural range 0 to c_cnt_max;
 	
 	begin 
 	
-	ledg0 <= pulse;
+		pwm_counter <= pwm_duty_cycle_percent * c_percent_step;
 	
 		p_pulse : process(clk)
 		begin
 			if rising_edge(clk) then
 				if(pwm_counter > period_counter) then
-					pulse <= '1';
+					ledg0 <= '1';
 				else
-					pulse <= '0';
+					ledg0 <= '0';
 				end if;
 			end if;
 		end process p_pulse;
@@ -81,17 +79,14 @@ architecture rtl of pwm_ctrl is
 			end if;
 		end process p_tick;
 		
-		p_send : process(clk)
+		p_send : process(tick_1ms)
 		begin
-			if rising_edge(clk) then
-
-				if tick_1ms = '1' then
-					current_dc_update <= '1';
-					current_dc <= std_logic_vector(to_unsigned(pwm_duty_cycle_percent, current_dc'length));
-					
-				else
-					current_dc_update <= '0';
-				end if;
+			if tick_1ms = '1' then
+				current_dc_update <= '1';
+				current_dc <= std_logic_vector(to_unsigned(pwm_duty_cycle_percent, current_dc'length));
+				
+			else
+				current_dc_update <= '0';
 			end if;
 		end process p_send;
 		
@@ -104,62 +99,49 @@ architecture rtl of pwm_ctrl is
 			
 				if key_off = '1' then
 					pwm_duty_cycle_percent <= 0;
-					pwm_counter <= 0;
 
 				elsif key_on = '1' then
 					pwm_duty_cycle_percent <= pwm_last_duty_cycle_percent;
-					pwm_counter <= pwm_counter_last;
 					
 				elsif key_up = '1' and pwm_duty_cycle_percent = 0 then
 					pwm_duty_cycle_percent <= 10;
 					update_last_on_percent <= '1';
-					pwm_counter <= 4999;
 				
 				elsif key_up = '1' and pwm_duty_cycle_percent < 100 then
 					pwm_duty_cycle_percent <= pwm_last_duty_cycle_percent + 1;
 					update_last_on_percent <= '1';
-					pwm_counter <= pwm_counter + 499;
 					
 				elsif key_down = '1' and pwm_duty_cycle_percent > 10 then
 					pwm_duty_cycle_percent <= pwm_last_duty_cycle_percent - 1;
 					update_last_on_percent <= '1';
-					pwm_counter <= pwm_counter - 499;
 				
 				elsif serial_on = '1' then
 					pwm_duty_cycle_percent <= pwm_last_duty_cycle_percent;
-					pwm_counter <= pwm_counter_last;
 					
 				elsif serial_off = '1' then
 					pwm_duty_cycle_percent <= 0;
-					pwm_counter <= 0;
 				
 				elsif serial_up = '1' and pwm_duty_cycle_percent = 0 then
 					pwm_duty_cycle_percent <= 10;
 					update_last_on_percent <= '1';
-					pwm_counter <= 4999;
 				
 				elsif serial_up = '1' and pwm_duty_cycle_percent < 100 then
 					pwm_duty_cycle_percent <= pwm_last_duty_cycle_percent + 1;
 					update_last_on_percent <= '1';
-					pwm_counter <= pwm_counter + 499;
 				
 				elsif serial_down = '1' and pwm_duty_cycle_percent > 10 then
 					pwm_duty_cycle_percent <= pwm_last_duty_cycle_percent - 1;
 					update_last_on_percent <= '1';
-					pwm_counter <= pwm_counter - 499;
 				
 				end if;
 				
 				if update_last_on_percent = '1' then
 					pwm_last_duty_cycle_percent <= pwm_duty_cycle_percent;
-					pwm_counter_last <= pwm_counter;
 				end if;
 			
 				if reset = '1' then
 					pwm_last_duty_cycle_percent <= 100;
-					pwm_counter_last <= 49999;
 					pwm_duty_cycle_percent <= 0;
-					pwm_counter <= 0;
 				end if;
 			end if;
 		end process p_pwm_ctrl;
